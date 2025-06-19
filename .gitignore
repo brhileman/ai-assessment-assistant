@@ -1,0 +1,89 @@
+# Nova Project .gitignore
+
+# Nova Project Structure - shape/ has its own git repository
+shape/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+.nyc_output/
+
+# Rails specific (for when we create Rails apps in code/)
+/code/*/log/*
+/code/*/tmp/*
+/code/*/storage/*
+/code/*/config/master.key
+/code/*/config/credentials.yml.enc
+/code/*/.bundle
+/code/*/vendor/bundle
+/code/*/node_modules/
+/code/*/yarn-error.log
+/code/*/public/assets
+/code/*/public/packs
+/code/*/public/packs-test
+
+# Database
+/code/*/db/*.sqlite3
+/code/*/db/*.sqlite3-*
+
+# Ignore uploaded files in development
+/code/*/storage/
+
+# Ignore master key for decrypting credentials and more.
+/code/*/config/master.key
+
+# Node.js dependencies (if using)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.development
+.env.production
+.env.test
+
+# Backup files
+*.bak
+*.backup
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 
