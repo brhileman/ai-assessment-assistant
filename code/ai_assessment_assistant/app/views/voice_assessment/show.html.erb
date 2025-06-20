@@ -430,7 +430,7 @@
                 type: 'response.create',
                 response: {
                   modalities: ['text', 'audio'],
-                  instructions: 'Begin the conversation with your opening greeting to start the assessment interview.'
+                  instructions: `You are LaunchPad Lab's AI early discovery assistant conducting an AI readiness assessment. Begin with: "Hi ${this.conversationSession.stakeholder_name}! I'm LaunchPad Lab's trained AI discovery assistant." Then briefly explain this is a 3-5 minute conversation to understand ${this.conversationSession.company_name}'s current state of technology and AI interests. Ask about their main responsibilities at ${this.conversationSession.company_name} to start the discovery process.`
                 }
               });
             }, 1000); // Small delay to ensure session is fully configured
