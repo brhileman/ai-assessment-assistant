@@ -1,7 +1,5 @@
 # Nova Project .gitignore
 
-# Nova Project Structure - shape/ has its own git repository
-shape/
 
 # macOS
 .DS_Store

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assessment - LaunchPad Lab</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Proxima Nova Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // Custom Tailwind config for modern LaunchPad Lab theme
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'lpl-blue': '#1E60BD',
+                        'lpl-blue-dark': '#0B4E95',
+                        'lpl-blue-light': '#3B82F6',
+                        'lpl-cyan': '#00ADEF'
+                    },
+                    fontFamily: {
+                        'proxima': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Modern gradient background */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 25%, #1E3A8A 75%, #1E60BD 100%);
+            min-height: 100vh;
+        }
+        
+        /* Glassmorphism card effect */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Futuristic wave animation */
+        @keyframes wave-animation {
+            0%, 100% { height: 6px; }
+            25% { height: 24px; }
+            50% { height: 40px; }
+            75% { height: 18px; }
+        }
+        
+        @keyframes wave-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(30, 96, 189, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(0, 173, 239, 0.8), 0 0 30px rgba(30, 96, 189, 0.6); }
+        }
+        
+        .wave-bar {
+            animation: wave-animation 1.8s infinite ease-in-out, wave-glow 2s infinite ease-in-out;
+            background: linear-gradient(180deg, 
+                #00ADEF 0%, 
+                #1E60BD 50%, 
+                #0B4E95 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .wave-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: 0s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.5s; }
+        .wave-bar:nth-child(7) { animation-delay: 0.6s; }
+        .wave-bar:nth-child(8) { animation-delay: 0.7s; }
+        .wave-bar:nth-child(9) { animation-delay: 0.8s; }
+        .wave-bar:nth-child(10) { animation-delay: 0.9s; }
+        
+
+        
+        /* Recording pulse */
+        @keyframes pulse-recording {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        
+        .recording-pulse {
+            animation: pulse-recording 2s infinite;
+        }
+        
+        /* Button hover effects */
+        .control-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
+        }
+        
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 96, 189, 0.3);
+        }
+        
+        /* Smooth scroll for transcript */
+        .transcript-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .transcript-scroll::-webkit-scrollbar-track {
+            background: rgba(51, 65, 85, 0.3);
+            border-radius: 3px;
+        }
+        
+        .transcript-scroll::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 3px;
+        }
+        
+        .transcript-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.7);
+        }
+    </style>
+</head>
+
+<body class="h-full font-proxima antialiased">
+    <!-- Header with Logo -->
+    <header class="fixed top-0 left-0 right-0 z-40 p-6">
+        <div class="flex justify-center">
+            <div class="w-40 h-10 bg-gradient-to-r from-lpl-blue to-lpl-cyan rounded-lg flex items-center justify-center shadow-lg">
+                <span class="text-white text-sm font-semibold">LaunchPad Lab</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Gradient Background -->
+    <div class="gradient-bg flex items-center justify-center p-6 pt-24">
+        
+        <!-- Main Assessment Card -->
+        <div class="glass-card rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-bold text-white mb-2">AI Assessment</h1>
+                <p class="text-slate-300 text-sm">Acme Corporation</p>
+            </div>
+            
+            <!-- Futuristic Wave Visualization -->
+            <div class="mb-8 bg-slate-800/30 rounded-2xl p-6">
+                <div class="flex items-center justify-center space-x-2 h-16">
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                    <div class="wave-bar w-1.5 rounded-full"></div>
+                </div>
+            </div>
+            
+            <!-- Conversation Transcript -->
+            <div class="mb-8 bg-slate-800/30 rounded-2xl p-4 max-h-64 overflow-y-auto transcript-scroll">
+                <div class="space-y-4">
+                    
+                    <!-- AI Message -->
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-gradient-to-r from-lpl-blue to-lpl-cyan rounded-full flex items-center justify-center">
+                                <span class="text-white text-xs font-semibold">AI</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lpl-cyan text-sm font-medium mb-1">Assistant</p>
+                            <p class="text-slate-200 text-sm leading-relaxed">
+                                Hi! I'm here to learn about your organization's AI readiness. Since you're from Acme Corporation, could you start by telling me about your role?
+                            </p>
+                            <span class="text-slate-500 text-xs mt-1 block">2:34 PM</span>
+                        </div>
+                    </div>
+
+                    <!-- User Message -->
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center">
+                                <span class="text-slate-300 text-xs font-semibold">You</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-slate-300 text-sm font-medium mb-1">You</p>
+                            <p class="text-slate-200 text-sm leading-relaxed">
+                                I'm the CTO at Acme Corporation. I oversee technology strategy and evaluate new solutions to improve our operations.
+                            </p>
+                            <span class="text-slate-500 text-xs mt-1 block">2:35 PM</span>
+                        </div>
+                    </div>
+
+                    <!-- Typing indicator -->
+                    <div class="flex space-x-3">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-gradient-to-r from-lpl-blue to-lpl-cyan rounded-full flex items-center justify-center">
+                                <span class="text-white text-xs font-semibold">AI</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-lpl-cyan text-sm font-medium mb-1">Assistant</p>
+                            <div class="flex space-x-1">
+                                <div class="w-2 h-2 bg-lpl-blue rounded-full animate-bounce"></div>
+                                <div class="w-2 h-2 bg-lpl-blue rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                                <div class="w-2 h-2 bg-lpl-blue rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Duration Status -->
+            <div class="text-center mb-6">
+                <p class="text-slate-400 text-sm">
+                    Duration: <span class="text-lpl-cyan font-medium">8:42</span>
+                </p>
+            </div>
+            
+            <!-- Control Bar -->
+            <div class="flex items-center justify-center space-x-6">
+                
+                <!-- Settings Button -->
+                <button class="control-button w-12 h-12 bg-slate-700/50 rounded-full flex items-center justify-center border border-slate-600/50 hover:bg-slate-600/50">
+                    <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                </button>
+                
+                <!-- Main Microphone Button -->
+                <button class="control-button w-16 h-16 bg-gradient-to-r from-lpl-blue to-lpl-cyan rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </button>
+                
+                <!-- End Assessment Button -->
+                <button id="finishButton" class="control-button w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center border border-red-500/30 hover:bg-red-500/30">
+                    <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                
+            </div>
+            
+            <!-- Helper Text -->
+            <div class="text-center mt-6">
+                <p class="text-slate-400 text-xs">
+                    Tap the microphone to continue • Tap X to finish
+                </p>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <!-- Modern Confirmation Modal -->
+    <div id="confirmModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity" aria-hidden="true"></div>
+            
+            <div class="relative glass-card rounded-2xl p-6 max-w-sm w-full">
+                <div class="text-center">
+                    <div class="mx-auto mb-4 w-12 h-12 bg-gradient-to-r from-orange-400 to-red-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-white mb-2" id="modal-title">
+                        Finish Assessment?
+                    </h3>
+                    <p class="text-slate-300 text-sm mb-6">
+                        Are you sure you want to complete your assessment? You can always continue if needed.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <button type="button" class="w-full px-4 py-3 bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white font-medium rounded-xl hover:from-lpl-blue-dark hover:to-lpl-blue transition-all duration-200">
+                            Yes, Finish Assessment
+                        </button>
+                        <button type="button" id="cancelButton" class="w-full px-4 py-3 bg-slate-700/50 text-slate-200 font-medium rounded-xl hover:bg-slate-600/50 transition-all duration-200 border border-slate-600/50">
+                            Continue Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const finishButton = document.getElementById('finishButton');
+            const modal = document.getElementById('confirmModal');
+            const cancelButton = document.getElementById('cancelButton');
+            
+            finishButton.addEventListener('click', function() {
+                modal.classList.remove('hidden');
+            });
+            
+            cancelButton.addEventListener('click', function() {
+                modal.classList.add('hidden');
+            });
+            
+            // Close on backdrop click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+            
+            // Add dynamic wave randomization for extra futuristic effect
+            const waveBars = document.querySelectorAll('.wave-bar');
+            
+            function randomizeWaves() {
+                waveBars.forEach((bar, index) => {
+                    setTimeout(() => {
+                        const height = Math.random() * 35 + 8;
+                        bar.style.height = height + 'px';
+                    }, index * 50);
+                });
+            }
+            
+            // Update waves every 1.5 seconds for more dynamic feel
+            setInterval(randomizeWaves, 1500);
+        });
+    </script>
+</body>
+</html> 
