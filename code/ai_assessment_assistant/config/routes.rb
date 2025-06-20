@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # Voice assessment interface routes (token-based)
+  get '/voice/:token', to: 'voice_assessment#show', as: :voice_assessment
+  patch '/voice/:token/complete', to: 'voice_assessment#complete', as: :complete_voice_assessment
+  get '/assessment/:token/completed', to: 'assessment#assessment_already_completed', as: :assessment_completed
   # Admin authentication with magic links  
   devise_for :admins, controllers: {
     magic_links: 'admins/magic_links'
