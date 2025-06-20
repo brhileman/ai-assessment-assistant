@@ -1,52 +1,63 @@
-<div class="min-h-screen gradient-bg flex items-center justify-center p-4">
-  <div class="glass-card w-full max-w-md text-center">
-    <!-- Header with Logo -->
-    <div class="mb-8">
-      <%= image_tag "White-Horizontal-LPL-Logo.svg", 
-          alt: "LaunchPad Lab", 
-          class: "h-12 mx-auto mb-6" %>
-      <h1 class="text-2xl font-bold text-white mb-2">Invalid Assessment Link</h1>
-    </div>
-    
-    <!-- Error Message -->
-    <div class="mb-8">
-      <div class="bg-red-500/20 border border-red-400 rounded-lg p-4 mb-6">
-        <p class="text-red-100">
-          The assessment link you're trying to access is invalid or has expired.
-        </p>
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Glassmorphism Card -->
+    <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
+      
+      <!-- LaunchPad Lab Logo -->
+      <div class="mb-8">
+        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+            alt: "LaunchPad Lab",
+            class: "h-8 mx-auto filter brightness-0 invert" %>
       </div>
       
-      <p class="text-slate-200 leading-relaxed">
-        This could happen if:
-      </p>
-      <ul class="text-slate-300 text-sm mt-3 space-y-1 text-left">
-        <li>• The link was copied incorrectly</li>
-        <li>• The assessment invitation has been canceled</li>
-        <li>• You've already completed this assessment</li>
-      </ul>
+      <!-- Error Message -->
+      <div class="mb-8">
+        <!-- Error Icon -->
+        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-red-500 to-pink-600 
+                    rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-white mb-2">Invalid Access Link</h1>
+        
+        <div class="text-sm text-gray-300 space-y-2">
+          <p>The assessment link you're trying to access is invalid or has expired.</p>
+          <p>Please check your email for the correct link or contact support.</p>
+        </div>
+      </div>
+      
+      <!-- Help Information -->
+      <div class="space-y-4">
+        <div class="p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
+          <h3 class="text-sm font-semibold text-red-200 mb-2">Common Issues</h3>
+          <div class="text-xs text-gray-300 text-left space-y-1">
+            <p>• Assessment link has expired</p>
+            <p>• URL was copied incorrectly</p>
+            <p>• Assessment has already been completed</p>
+          </div>
+        </div>
+        
+        <div class="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">Need Help?</h3>
+          <p class="text-xs text-gray-300">
+            Contact your assessment coordinator or reach out to 
+            <a href="mailto:support@launchpadlab.com" class="text-blue-400 hover:text-blue-300">
+              support@launchpadlab.com
+            </a>
+          </p>
+        </div>
+      </div>
+      
     </div>
     
-    <!-- Contact Information -->
-    <div class="mb-8">
-      <p class="text-slate-200 mb-4">
-        Please contact your assessment coordinator or reach out to us directly:
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-xs text-gray-400">
+        © 2025 LaunchPad Lab. AI Assessment Assistant
       </p>
-      <a href="mailto:assessment@launchpadlab.com" 
-         class="inline-flex items-center text-lpl-cyan hover:text-white transition-colors">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-        assessment@launchpadlab.com
-      </a>
-    </div>
-    
-    <!-- Back to Home -->
-    <div class="text-center">
-      <%= link_to root_path, 
-          class: "inline-block bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white py-3 px-6 rounded-lg font-medium hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5" do %>
-        Return to Homepage
-      <% end %>
     </div>
   </div>
 </div> 

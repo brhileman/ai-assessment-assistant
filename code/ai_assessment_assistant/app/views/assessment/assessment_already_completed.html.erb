@@ -1,68 +1,65 @@
-<div class="min-h-screen gradient-bg flex items-center justify-center p-4">
-  <div class="glass-card w-full max-w-md text-center">
-    <!-- Header with Logo -->
-    <div class="mb-8">
-      <%= image_tag "White-Horizontal-LPL-Logo.svg", 
-          alt: "LaunchPad Lab", 
-          class: "h-12 mx-auto mb-6" %>
-      <h1 class="text-2xl font-bold text-white mb-2">Assessment Complete</h1>
-    </div>
-    
-    <!-- Success Message -->
-    <div class="mb-8">
-      <div class="bg-green-500/20 border border-green-400 rounded-lg p-4 mb-6">
-        <svg class="w-8 h-8 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <p class="text-green-100 font-medium">
-          Thank you! You've already completed your assessment.
-        </p>
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Glassmorphism Card -->
+    <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
+      
+      <!-- LaunchPad Lab Logo -->
+      <div class="mb-8">
+        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+            alt: "LaunchPad Lab",
+            class: "h-8 mx-auto filter brightness-0 invert" %>
       </div>
       
-      <% if @stakeholder.present? %>
-        <p class="text-slate-200 leading-relaxed mb-4">
-          Hello <%= @stakeholder.name %>, you completed your AI readiness assessment 
-          for <strong><%= @stakeholder.company.name %></strong>
-          <% if @stakeholder.assessment&.completed_at %>
-            on <%= @stakeholder.assessment.completed_at.strftime("%B %d, %Y") %>.
-          <% else %>
-            recently.
-          <% end %>
-        </p>
+      <!-- Completion Message -->
+      <div class="mb-8">
+        <!-- Success Icon -->
+        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-green-500 to-emerald-600 
+                    rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-white mb-2">Assessment Complete</h1>
+        <h2 class="text-lg text-blue-200 mb-4"><%= @company.name %></h2>
+        
+        <div class="text-sm text-gray-300 space-y-2">
+          <p>Thank you for completing your AI assessment!</p>
+          <p>Your responses have been recorded and submitted.</p>
+        </div>
+      </div>
+      
+      <!-- Assessment Details -->
+      <% if @assessment&.completed_at %>
+        <div class="mb-8 p-4 rounded-2xl bg-white/5 border border-white/10">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">Assessment Details</h3>
+          <div class="text-xs text-gray-300 space-y-1">
+            <p>Completed: <%= @assessment.completed_at.strftime("%B %d, %Y at %l:%M %p") %></p>
+            <% if @assessment.duration_minutes > 0 %>
+              <p>Duration: <%= @assessment.duration_minutes %> minutes</p>
+            <% end %>
+          </div>
+        </div>
       <% end %>
       
-      <p class="text-slate-300 text-sm">
-        Your insights are helping <%= @stakeholder&.company&.name || "your organization" %> 
-        better understand their AI readiness and opportunities.
+      <!-- Next Steps -->
+      <div class="space-y-4">
+        <div class="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">What's Next?</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">
+            Your assessment results are being reviewed. You will be contacted with 
+            follow-up information and recommendations.
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-xs text-gray-400">
+        © 2025 LaunchPad Lab. AI Assessment Assistant
       </p>
-    </div>
-    
-    <!-- Next Steps -->
-    <div class="mb-8">
-      <h3 class="text-white font-medium mb-3">What happens next?</h3>
-      <ul class="text-slate-300 text-sm space-y-2 text-left">
-        <li>• The LaunchPad Lab team will analyze all responses</li>
-        <li>• Your organization will receive comprehensive recommendations</li>
-        <li>• Look for follow-up communication from your team</li>
-      </ul>
-    </div>
-    
-    <!-- Contact Information -->
-    <div class="mb-8">
-      <p class="text-slate-400 text-sm">
-        Questions about your assessment? Contact us at 
-        <a href="mailto:assessment@launchpadlab.com" class="text-lpl-cyan hover:underline">
-          assessment@launchpadlab.com
-        </a>
-      </p>
-    </div>
-    
-    <!-- Return Home -->
-    <div class="text-center">
-      <%= link_to root_path, 
-          class: "inline-block bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white py-3 px-6 rounded-lg font-medium hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5" do %>
-        Return to Homepage
-      <% end %>
     </div>
   </div>
 </div> 

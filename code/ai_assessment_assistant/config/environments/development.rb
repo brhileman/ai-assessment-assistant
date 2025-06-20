@@ -31,10 +31,23 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Configure mailer for development (show emails in console)
+  # Configure mailer for development (file-based for easy testing)
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :file
   config.action_mailer.file_settings = { location: Rails.root.join('tmp/mail') }
+  config.action_mailer.perform_deliveries = true
+  
+  # SendGrid SMTP configuration (commented for development, use in production)
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #   :user_name => 'apikey',
+  #   :password => Rails.application.credentials.sendgrid[:api_key],
+  #   :domain => 'localhost',
+  #   :address => 'smtp.sendgrid.net',
+  #   :port => 587,
+  #   :authentication => :plain,
+  #   :enable_starttls_auto => true
+  # }
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false

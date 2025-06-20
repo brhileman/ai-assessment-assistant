@@ -10,9 +10,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
-# FactoryBot configuration
-require 'factory_bot_rails'
-
 # Capybara configuration for system testing
 require 'capybara/rails'
 require 'capybara/rspec'
@@ -47,7 +44,7 @@ rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
 RSpec.configure do |config|
-  # Include FactoryBot syntax methods
+  # Include FactoryBot methods
   config.include FactoryBot::Syntax::Methods
   
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
@@ -84,13 +81,6 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
-  
-  # FactoryBot configuration - include FactoryBot methods (create, build, etc.)
-  config.include FactoryBot::Syntax::Methods
-  
-  # Devise test helpers for authentication in controller/request specs
-  config.include Devise::Test::IntegrationHelpers, type: :request
-  config.include Devise::Test::ControllerHelpers, type: :controller
   
   # System testing configuration
   config.before(:each, type: :system) do

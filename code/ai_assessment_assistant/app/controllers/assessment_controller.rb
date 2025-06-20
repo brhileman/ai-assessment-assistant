@@ -1,28 +1,38 @@
 class AssessmentController < ApplicationController
-  before_action :find_stakeholder_by_token, only: [:show, :start]
-  before_action :check_assessment_status, only: [:show, :start]
+  before_action :find_stakeholder_by_token
   
   def show
     @company = @stakeholder.company
-    @assessment_started = @stakeholder.assessment&.present? && @stakeholder.assessment.started_at.present?
-  end
-  
-  def start
-    # Check if stakeholder already has an assessment
-    if @stakeholder.assessment.present?
-      redirect_to assessment_path(@stakeholder.invitation_token), 
-                  alert: "Unable to start assessment. Please try again."
+    
+    # Check if assessment is already completed
+    if @stakeholder.assessment&.completed?
+      redirect_to assessment_completed_path(@stakeholder.invitation_token)
       return
     end
     
-    @assessment = @stakeholder.build_assessment(started_at: Time.current)
-    if @assessment.save
-      @stakeholder.update(status: :assessment_started)
+    # Check if assessment is already started
+    if @stakeholder.assessment&.present?
       redirect_to voice_assessment_path(@stakeholder.invitation_token)
-    else
-      redirect_to assessment_path(@stakeholder.invitation_token), 
-                  alert: "Unable to start assessment. Please try again."
+      return
     end
+  end
+  
+  def start
+    # Create assessment for this stakeholder
+    @assessment = Assessment.create!(
+      stakeholder: @stakeholder
+    )
+    
+    # Update stakeholder status
+    @stakeholder.update!(status: :assessment_started)
+    
+    # Redirect to voice assessment interface
+    redirect_to voice_assessment_path(@stakeholder.invitation_token)
+  end
+  
+  def assessment_already_completed
+    @company = @stakeholder.company
+    @assessment = @stakeholder.assessment
   end
   
   private
@@ -33,10 +43,4 @@ class AssessmentController < ApplicationController
       render 'errors/invalid_token', status: :not_found
     end
   end
-  
-  def check_assessment_status
-    if @stakeholder&.assessment&.completed?
-      render 'assessment_already_completed'
-    end
-  end
-end
+end 
