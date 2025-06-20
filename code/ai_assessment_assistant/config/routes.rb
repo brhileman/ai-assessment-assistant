@@ -1,4 +1,24 @@
 Rails.application.routes.draw do
+  # Stakeholder assessment routes (token-based)
+  get '/assessment/:token', to: 'assessment#show', as: :assessment
+  post '/assessment/:token/start', to: 'assessment#start', as: :start_assessment
+  get '/assessment/:token/completed', to: 'assessment#assessment_already_completed', as: :assessment_completed
+  
+  # Voice assessment interface routes (token-based)
+  get '/voice/:token', to: 'voice_assessment#show', as: :voice_assessment
+  patch '/voice/:token/complete', to: 'voice_assessment#complete', as: :complete_voice_assessment
+  
+  # Voice conversation API routes
+  namespace :api do
+    post 'voice/:token/start', to: 'voice_conversation#start_session', as: 'start_voice_session'
+    get 'voice/:token/realtime_config', to: 'voice_conversation#get_realtime_config', as: 'voice_realtime_config'
+    post 'voice/:token/transcript', to: 'voice_conversation#update_transcript', as: 'update_voice_transcript'
+    post 'voice/:token/audio', to: 'voice_conversation#process_audio', as: 'process_voice_audio'
+    post 'voice/:token/message', to: 'voice_conversation#send_text_message', as: 'send_voice_message'
+    post 'voice/:token/end', to: 'voice_conversation#end_session', as: 'end_voice_session'
+    get 'voice/:token/status', to: 'voice_conversation#session_status', as: 'voice_session_status'
+  end
+  
   # Admin authentication with magic links  
   devise_for :admins, controllers: {
     magic_links: 'admins/magic_links'
@@ -18,16 +38,13 @@ Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
     resources :companies do
-      resources :stakeholders, only: [:new, :create, :destroy] do
+      resources :stakeholders, only: [:new, :create, :destroy], param: :token do
         member do
           post :resend_invitation
         end
       end
     end
   end
-  
-  # Stakeholder assessment routes (public-facing)
-  get '/assessment/:token', to: 'assessments#show', as: 'stakeholder_assessment'
   
   # Welcome page routes
   root "pages#welcome"

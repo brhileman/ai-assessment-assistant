@@ -1,0 +1,52 @@
+<div class="min-h-screen gradient-bg flex items-center justify-center p-4">
+  <div class="glass-card w-full max-w-md text-center">
+    <!-- Header with Logo -->
+    <div class="mb-8">
+      <%= image_tag "White-Horizontal-LPL-Logo.svg", 
+          alt: "LaunchPad Lab", 
+          class: "h-12 mx-auto mb-6" %>
+      <h1 class="text-2xl font-bold text-white mb-2">Invalid Assessment Link</h1>
+    </div>
+    
+    <!-- Error Message -->
+    <div class="mb-8">
+      <div class="bg-red-500/20 border border-red-400 rounded-lg p-4 mb-6">
+        <p class="text-red-100">
+          The assessment link you're trying to access is invalid or has expired.
+        </p>
+      </div>
+      
+      <p class="text-slate-200 leading-relaxed">
+        This could happen if:
+      </p>
+      <ul class="text-slate-300 text-sm mt-3 space-y-1 text-left">
+        <li>• The link was copied incorrectly</li>
+        <li>• The assessment invitation has been canceled</li>
+        <li>• You've already completed this assessment</li>
+      </ul>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="mb-8">
+      <p class="text-slate-200 mb-4">
+        Please contact your assessment coordinator or reach out to us directly:
+      </p>
+      <a href="mailto:assessment@launchpadlab.com" 
+         class="inline-flex items-center text-lpl-cyan hover:text-white transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M3 8l7.89 7.89a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        assessment@launchpadlab.com
+      </a>
+    </div>
+    
+    <!-- Back to Home -->
+    <div class="text-center">
+      <%= link_to root_path, 
+          class: "inline-block bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white py-3 px-6 rounded-lg font-medium hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5" do %>
+        Return to Homepage
+      <% end %>
+    </div>
+  </div>
+</div> 
