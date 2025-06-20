@@ -1,0 +1,65 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Glassmorphism Card -->
+    <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
+      
+      <!-- LaunchPad Lab Logo -->
+      <div class="mb-8">
+        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+            alt: "LaunchPad Lab",
+            class: "h-8 mx-auto filter brightness-0 invert" %>
+      </div>
+      
+      <!-- Completion Message -->
+      <div class="mb-8">
+        <!-- Success Icon -->
+        <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-green-500 to-emerald-600 
+                    rounded-full flex items-center justify-center">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-white mb-2">Assessment Complete</h1>
+        <h2 class="text-lg text-blue-200 mb-4"><%= @company.name %></h2>
+        
+        <div class="text-sm text-gray-300 space-y-2">
+          <p>Thank you for completing your AI assessment!</p>
+          <p>Your responses have been recorded and submitted.</p>
+        </div>
+      </div>
+      
+      <!-- Assessment Details -->
+      <% if @assessment&.completed_at %>
+        <div class="mb-8 p-4 rounded-2xl bg-white/5 border border-white/10">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">Assessment Details</h3>
+          <div class="text-xs text-gray-300 space-y-1">
+            <p>Completed: <%= @assessment.completed_at.strftime("%B %d, %Y at %l:%M %p") %></p>
+            <% if @assessment.duration_minutes > 0 %>
+              <p>Duration: <%= @assessment.duration_minutes %> minutes</p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Next Steps -->
+      <div class="space-y-4">
+        <div class="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">What's Next?</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">
+            Your assessment results are being reviewed. You will be contacted with 
+            follow-up information and recommendations.
+          </p>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-xs text-gray-400">
+        © 2025 LaunchPad Lab. AI Assessment Assistant
+      </p>
+    </div>
+  </div>
+</div> 

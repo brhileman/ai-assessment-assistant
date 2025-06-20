@@ -1,0 +1,62 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- Glassmorphism Card -->
+    <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
+      
+      <!-- LaunchPad Lab Logo -->
+      <div class="mb-8">
+        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+            alt: "LaunchPad Lab",
+            class: "h-8 mx-auto filter brightness-0 invert" %>
+      </div>
+      
+      <!-- Company Information -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-white mb-2">AI Assessment</h1>
+        <h2 class="text-lg text-blue-200 mb-4"><%= @company.name %></h2>
+        
+        <div class="text-sm text-gray-300 space-y-2">
+          <p>Welcome! You've been invited to participate in an AI readiness assessment.</p>
+          <p>This conversation will take approximately 15-20 minutes.</p>
+        </div>
+      </div>
+      
+      <!-- Company Context -->
+      <% if @company.custom_instructions.present? %>
+        <div class="mb-8 p-4 rounded-2xl bg-white/5 border border-white/10">
+          <h3 class="text-sm font-semibold text-blue-200 mb-2">Assessment Context</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">
+            <%= truncate(@company.custom_instructions, length: 150) %>
+          </p>
+        </div>
+      <% end %>
+      
+      <!-- Start Assessment Button -->
+      <div class="space-y-4">
+        <%= form_with url: start_assessment_path(@stakeholder.invitation_token), 
+            method: :post, 
+            local: true,
+            class: "space-y-4" do |form| %>
+          
+          <%= form.submit "Begin Assessment", 
+              class: "w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 
+                     text-white font-semibold py-4 px-6 rounded-2xl shadow-lg 
+                     transform hover:-translate-y-1 transition-all duration-200
+                     focus:outline-none focus:ring-4 focus:ring-blue-500/50" %>
+        <% end %>
+        
+        <p class="text-xs text-gray-400">
+          By proceeding, you agree to participate in this assessment interview.
+        </p>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-xs text-gray-400">
+        © 2025 LaunchPad Lab. AI Assessment Assistant
+      </p>
+    </div>
+  </div>
+</div> 

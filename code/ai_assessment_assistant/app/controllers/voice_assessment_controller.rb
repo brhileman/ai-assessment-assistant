@@ -8,8 +8,8 @@ class VoiceAssessmentController < ApplicationController
     @assessment = @stakeholder.assessment
     @assessment_duration = assessment_duration_minutes
     
-    # This will eventually create OpenAI session
-    # @openai_session = OpenAIRealtimeService.new(@stakeholder).create_conversation_session
+    # Create OpenAI session for real-time conversation
+    @openai_session = OpenaiRealtimeService.new(@stakeholder).create_conversation_session
   end
   
   def complete
@@ -53,7 +53,7 @@ class VoiceAssessmentController < ApplicationController
   end
   
   def assessment_duration_minutes
-    return 0 unless @assessment&.started_at
-    ((Time.current - @assessment.started_at) / 1.minute).round
+    return 0 unless @assessment&.created_at
+    ((Time.current - @assessment.created_at) / 1.minute).round
   end
 end

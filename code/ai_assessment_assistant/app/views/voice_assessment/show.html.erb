@@ -48,13 +48,9 @@
           </div>
           <div class="flex-1">
             <p class="text-lpl-cyan text-sm font-medium mb-1">Assistant</p>
-            <p class="text-slate-200 text-sm leading-relaxed">
-              Hello! I'm here to learn about <%= @company.name %>'s AI readiness. 
-              <% if @company.custom_instructions.present? %>
-                <%= @company.custom_instructions %>
-              <% else %>
-                Could you start by telling me about your role and responsibilities?
-              <% end %>
+            <p class="text-slate-200 text-sm leading-relaxed" id="welcomeMessage">
+              <%= raw @openai_session[:conversation_history]&.find { |msg| msg[:role] == 'assistant' }&.dig(:content) || 
+                  "Hello! I'm here to learn about #{@company.name}'s AI readiness. Could you start by telling me about your role and responsibilities?" %>
             </p>
             <span class="text-slate-500 text-xs mt-1 block" id="welcomeTime"></span>
           </div>
@@ -164,7 +160,7 @@
 <!-- Voice Assessment JavaScript -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Initialize voice assessment interface
+    // Initialize voice assessment interface with proper WebRTC
     const VoiceAssessment = {
       init() {
         this.setupElements();
@@ -172,6 +168,7 @@
         this.startDurationTimer();
         this.initializeWaveVisualizer();
         this.setWelcomeTime();
+        this.initializeVoiceSession();
       },
 
       setupElements() {
@@ -187,15 +184,27 @@
         this.finalTranscriptField = document.getElementById('finalTranscriptField');
         
         this.startTime = new Date();
-        this.isRecording = false;
+        this.isConnected = false;
         this.transcriptData = [];
+        this.conversationSession = null;
+        
+        // WebRTC components
+        this.peerConnection = null;
+        this.dataChannel = null;
+        this.audioElement = null;
+        this.mediaStream = null;
+        this.webrtcConfig = null;
+        
+        this.stakeholderToken = '<%= @stakeholder.invitation_token %>';
+        this.openaiSession = <%= raw @openai_session.to_json %>;
       },
 
       setupEventListeners() {
         this.finishButton.addEventListener('click', () => this.showConfirmModal());
         this.cancelButton.addEventListener('click', () => this.hideConfirmModal());
-        this.microphoneButton.addEventListener('click', () => this.toggleMicrophone());
+        this.microphoneButton.addEventListener('click', () => this.toggleVoiceConversation());
         this.settingsButton.addEventListener('click', () => this.showSettings());
+        this.settingsButton.addEventListener('dblclick', () => this.testTextInput());
         
         // Close modal on backdrop click
         this.modal.addEventListener('click', (e) => {
@@ -203,7 +212,12 @@
         });
       },
 
-      showConfirmModal() {
+      async showConfirmModal() {
+        // End voice session
+        if (this.peerConnection) {
+          await this.endVoiceSession();
+        }
+        
         // Save current transcript to hidden field
         this.finalTranscriptField.value = this.getTranscriptText();
         this.modal.classList.remove('hidden');
@@ -213,30 +227,14 @@
         this.modal.classList.add('hidden');
       },
 
-      toggleMicrophone() {
-        if (!this.isRecording) {
-          this.startRecording();
-        } else {
-          this.stopRecording();
-        }
-      },
-
-      startRecording() {
-        this.isRecording = true;
-        this.microphoneButton.classList.add('recording-pulse');
-        console.log('🎙️ Recording started');
-        // TODO: Implement actual microphone recording
-      },
-
-      stopRecording() {
-        this.isRecording = false;
-        this.microphoneButton.classList.remove('recording-pulse');
-        console.log('⏹️ Recording stopped');
-        // TODO: Process audio and get transcript
+      // Test method for text input (fallback)
+      async testTextInput() {
+        const testMessage = "I work as a software engineer and am interested in how AI can help with code reviews and automated testing.";
+        await this.sendTextMessage(testMessage);
       },
 
       showSettings() {
-        alert('Settings panel coming soon!');
+        alert('Settings: Voice conversation powered by OpenAI Realtime API via WebRTC\n\nFor best results:\n• Use Chrome, Edge, or Safari\n• Ensure stable internet connection\n• Speak clearly at normal volume\n• Wait for AI to finish speaking before responding\n\nNote: Ephemeral tokens expire every minute for security');
       },
 
       addMessage(speaker, content, isUser = false) {
@@ -266,13 +264,38 @@
         this.transcriptMessages.appendChild(messageDiv);
         this.scrollToBottom();
         
-        // Save to transcript data
-        this.transcriptData.push({
+        // Save to transcript data and backend
+        const transcriptEntry = {
           speaker: speakerLabel,
           content: content,
           timestamp: new Date().toISOString(),
           isUser: isUser
-        });
+        };
+        
+        this.transcriptData.push(transcriptEntry);
+        this.updateBackendTranscript(transcriptEntry);
+      },
+
+      async updateBackendTranscript(transcriptEntry) {
+        if (!this.conversationSession) return;
+        
+        try {
+          await fetch(`/api/voice/${this.stakeholderToken}/transcript`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+            },
+            body: JSON.stringify({
+              session_id: this.conversationSession.session_id,
+              type: transcriptEntry.isUser ? 'user_speech' : 'ai_speech',
+              content: transcriptEntry.content,
+              speaker: transcriptEntry.isUser ? 'user' : 'assistant'
+            })
+          });
+        } catch (error) {
+          console.error('Error updating transcript:', error);
+        }
       },
 
       scrollToBottom() {
@@ -318,7 +341,336 @@
         };
         
         // Update waves every 1.5 seconds for dynamic effect
-        setInterval(randomizeWaves, 1500);
+        this.waveInterval = setInterval(randomizeWaves, 1500);
+      },
+
+      updateWaveVisualizerWithAudio(audioLevel) {
+        const waveBars = document.querySelectorAll('.wave-bar');
+        waveBars.forEach((bar, index) => {
+          const intensity = audioLevel * (1 - Math.abs(index - 5) / 5);
+          const height = Math.max(8, intensity * 40);
+          bar.style.height = height + 'px';
+        });
+      },
+
+      // Initialize voice conversation session
+      async initializeVoiceSession() {
+        try {
+          // Use session data already created on server
+          this.conversationSession = this.openaiSession;
+          console.log('🎯 Voice session initialized:', this.conversationSession.session_id);
+          console.log('🏢 Company context:', this.conversationSession.company_name);
+          console.log('👤 Stakeholder:', this.conversationSession.stakeholder_name);
+          
+          // Get WebRTC configuration with ephemeral token
+          await this.getWebRTCConfig();
+          
+        } catch (error) {
+          console.error('Error initializing voice session:', error);
+          this.addMessage('System', 'Voice session initialization failed. Please refresh the page and try again.', false);
+        }
+      },
+
+      async getWebRTCConfig() {
+        try {
+          const response = await fetch(`/api/voice/${this.stakeholderToken}/realtime_config?session_id=${this.conversationSession.session_id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          const data = await response.json();
+          if (data.success) {
+            this.webrtcConfig = data.config;
+            console.log('🔧 WebRTC config loaded with ephemeral token');
+            console.log('⏰ Token expires at:', this.webrtcConfig.session_expires_at);
+          } else {
+            throw new Error(data.error || 'Failed to get WebRTC config');
+          }
+        } catch (error) {
+          console.error('Error getting WebRTC config:', error);
+          throw error;
+        }
+      },
+
+      // Enhanced microphone toggle with proper WebRTC
+      async toggleVoiceConversation() {
+        if (!this.isConnected) {
+          await this.startVoiceConversation();
+        } else {
+          await this.stopVoiceConversation();
+        }
+      },
+
+      async startVoiceConversation() {
+        try {
+          console.log('🎤 Starting WebRTC voice conversation...');
+          
+          if (!this.webrtcConfig) {
+            await this.getWebRTCConfig();
+          }
+          
+          // Check if ephemeral token is still valid
+          const expiresAt = new Date(this.webrtcConfig.session_expires_at);
+          if (expiresAt < new Date()) {
+            console.log('🔄 Token expired, refreshing...');
+            await this.getWebRTCConfig();
+          }
+          
+          // Create RTCPeerConnection
+          this.peerConnection = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+          });
+          
+          // Set up audio element for AI responses
+          this.audioElement = document.createElement('audio');
+          this.audioElement.autoplay = true;
+          
+          // Handle remote audio stream from AI
+          this.peerConnection.ontrack = (event) => {
+            console.log('🔊 Received AI audio stream');
+            this.audioElement.srcObject = event.streams[0];
+          };
+          
+          // Request microphone permission and add local audio track
+          this.mediaStream = await navigator.mediaDevices.getUserMedia({ 
+            audio: {
+              sampleRate: 24000,
+              channelCount: 1,
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true
+            } 
+          });
+          
+          // Add local audio track to peer connection
+          this.mediaStream.getTracks().forEach(track => {
+            this.peerConnection.addTrack(track, this.mediaStream);
+          });
+          
+          // Create data channel for sending/receiving events
+          this.dataChannel = this.peerConnection.createDataChannel('oai-events');
+          
+          // Handle incoming events from OpenAI
+          this.dataChannel.addEventListener('message', (event) => {
+            this.handleOpenAIEvent(JSON.parse(event.data));
+          });
+          
+          this.dataChannel.addEventListener('open', () => {
+            console.log('✅ Data channel opened - ready for conversation!');
+            
+            // Send session configuration
+            this.sendOpenAIEvent({
+              type: 'session.update',
+              session: {
+                modalities: ['text', 'audio'],
+                instructions: this.webrtcConfig.instructions,
+                voice: this.webrtcConfig.voice,
+                input_audio_format: 'pcm16',
+                output_audio_format: 'pcm16',
+                input_audio_transcription: { model: 'whisper-1' },
+                turn_detection: {
+                  type: 'server_vad',
+                  threshold: 0.5,
+                  prefix_padding_ms: 300,
+                  silence_duration_ms: 500
+                },
+                temperature: 0.7
+              }
+            });
+          });
+          
+          // Create SDP offer
+          const offer = await this.peerConnection.createOffer();
+          await this.peerConnection.setLocalDescription(offer);
+          
+          // Send SDP offer to OpenAI Realtime API
+          const response = await fetch(`${this.webrtcConfig.api_endpoint}?model=${this.webrtcConfig.model}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${this.webrtcConfig.ephemeral_token}`,
+              'Content-Type': 'application/sdp'
+            },
+            body: offer.sdp
+          });
+          
+          if (!response.ok) {
+            throw new Error(`SDP exchange failed: ${response.status} ${response.statusText}`);
+          }
+          
+          // Get SDP answer and set as remote description
+          const answerSdp = await response.text();
+          const answer = {
+            type: 'answer',
+            sdp: answerSdp
+          };
+          
+          await this.peerConnection.setRemoteDescription(answer);
+          
+          // Update UI
+          this.isConnected = true;
+          this.microphoneButton.classList.add('recording-pulse');
+          this.microphoneButton.style.backgroundColor = '#ef4444'; // Red when recording
+          
+          console.log('✅ WebRTC voice conversation started successfully!');
+          
+        } catch (error) {
+          console.error('Error starting WebRTC voice conversation:', error);
+          this.addMessage('System', `Failed to start voice conversation: ${error.message}. Please check microphone permissions and try again.`, false);
+        }
+      },
+
+      sendOpenAIEvent(event) {
+        if (this.dataChannel && this.dataChannel.readyState === 'open') {
+          this.dataChannel.send(JSON.stringify(event));
+        } else {
+          console.warn('Data channel not ready for sending events');
+        }
+      },
+
+      handleOpenAIEvent(event) {
+        console.log('📨 OpenAI event:', event.type);
+        
+        switch (event.type) {
+          case 'session.created':
+            console.log('✅ Session created');
+            break;
+            
+          case 'conversation.item.input_audio_transcription.completed':
+            // User speech transcribed
+            if (event.transcript) {
+              this.addMessage('You', event.transcript, true);
+            }
+            break;
+            
+          case 'response.audio_transcript.delta':
+            // AI speech being generated (real-time)
+            this.handleAIResponseDelta(event.delta);
+            break;
+            
+          case 'response.audio_transcript.done':
+            // AI response complete
+            if (event.transcript) {
+              this.addMessage('Assistant', event.transcript, false);
+            }
+            break;
+            
+          case 'response.done':
+            console.log('🎯 AI response completed');
+            break;
+            
+          case 'error':
+            console.error('OpenAI error:', event.error);
+            this.addMessage('System', `Error: ${event.error.message}`, false);
+            break;
+            
+          default:
+            console.log('📋 Unhandled event type:', event.type);
+        }
+      },
+
+      handleAIResponseDelta(delta) {
+        // Handle real-time AI response text (could show typing indicator)
+        if (delta) {
+          console.log('🔤 AI speaking:', delta);
+        }
+      },
+
+      async stopVoiceConversation() {
+        console.log('🛑 Stopping WebRTC voice conversation...');
+        
+        // Close data channel
+        if (this.dataChannel) {
+          this.dataChannel.close();
+          this.dataChannel = null;
+        }
+        
+        // Close peer connection
+        if (this.peerConnection) {
+          this.peerConnection.close();
+          this.peerConnection = null;
+        }
+        
+        // Stop media stream
+        if (this.mediaStream) {
+          this.mediaStream.getTracks().forEach(track => track.stop());
+          this.mediaStream = null;
+        }
+        
+        // Remove audio element
+        if (this.audioElement) {
+          this.audioElement.pause();
+          this.audioElement.srcObject = null;
+          this.audioElement = null;
+        }
+        
+        // Update UI
+        this.isConnected = false;
+        this.microphoneButton.classList.remove('recording-pulse');
+        this.microphoneButton.style.backgroundColor = '';
+        
+        console.log('✅ WebRTC voice conversation stopped');
+      },
+
+      // End voice session
+      async endVoiceSession() {
+        await this.stopVoiceConversation();
+        
+        try {
+          const response = await fetch(`/api/voice/${this.stakeholderToken}/end`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+            },
+            body: JSON.stringify({
+              session_id: this.conversationSession.session_id
+            })
+          });
+          
+          const data = await response.json();
+          if (data.success) {
+            console.log('🏁 Voice session ended');
+            if (data.final_message) {
+              this.addMessage('Assistant', data.final_message, false);
+            }
+          }
+        } catch (error) {
+          console.error('Error ending voice session:', error);
+        }
+      },
+
+      // Send text message (for testing/fallback)
+      async sendTextMessage(message) {
+        if (!this.conversationSession) {
+          console.error('No active conversation session');
+          return;
+        }
+        
+        try {
+          // Add user message to transcript
+          this.addMessage('You', message, true);
+          
+          const response = await fetch(`/api/voice/${this.stakeholderToken}/message`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+            },
+            body: JSON.stringify({
+              message: message,
+              session_id: this.conversationSession.session_id
+            })
+          });
+          
+          const data = await response.json();
+          if (data.success) {
+            console.log('📝 Text message processed');
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
       }
     };
 

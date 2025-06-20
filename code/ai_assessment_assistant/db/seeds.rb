@@ -13,7 +13,8 @@ puts "🌱 Starting database seed..."
 # Admin allowlist - these emails are authorized for admin access
 admin_emails = [
   'admin@launchpadlab.com',
-  'assessment@launchpadlab.com'
+  'assessment@launchpadlab.com',
+  'bretthilema@gmail.com'
 ]
 
 puts "Setting up admin allowlist..."
