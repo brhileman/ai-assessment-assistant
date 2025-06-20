@@ -79,14 +79,6 @@
     <!-- Control Bar -->
     <div class="flex items-center justify-center space-x-6">
       
-      <!-- Settings Button -->
-      <button id="settingsButton" class="control-button w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 transition-all duration-300">
-        <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-        </svg>
-      </button>
-      
       <!-- Connection Status Indicator -->
       <div id="connectionStatus" class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
         <!-- Connecting State (default) -->
@@ -103,11 +95,12 @@
         </div>
       </div>
       
-      <!-- End Assessment Button -->
-      <button id="finishButton" class="control-button w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center border border-red-400/30 hover:bg-red-500/30 transition-all duration-300">
-        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <!-- End Conversation Button -->
+      <button id="finishButton" class="px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg border-2 border-red-400/30 hover:border-red-300/50 transition-all duration-300 transform hover:-translate-y-1 flex items-center space-x-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
+        <span>End Conversation</span>
       </button>
       
     </div>
@@ -182,7 +175,6 @@
         this.connectingSpinner = document.getElementById('connectingSpinner');
         this.connectedMic = document.getElementById('connectedMic');
         this.statusText = document.getElementById('statusText');
-        this.settingsButton = document.getElementById('settingsButton');
         this.transcriptContainer = document.getElementById('transcriptContainer');
         this.transcriptMessages = document.getElementById('transcriptMessages');
         this.typingIndicator = document.getElementById('typingIndicator');
@@ -208,8 +200,6 @@
       setupEventListeners() {
         this.finishButton.addEventListener('click', () => this.showConfirmModal());
         this.cancelButton.addEventListener('click', () => this.hideConfirmModal());
-        this.settingsButton.addEventListener('click', () => this.showSettings());
-        this.settingsButton.addEventListener('dblclick', () => this.testTextInput());
         
         // Close modal on backdrop click
         this.modal.addEventListener('click', (e) => {
@@ -230,16 +220,6 @@
 
       hideConfirmModal() {
         this.modal.classList.add('hidden');
-      },
-
-      // Test method for text input (fallback)
-      async testTextInput() {
-        const testMessage = "I work as a software engineer and am interested in how AI can help with code reviews and automated testing.";
-        await this.sendTextMessage(testMessage);
-      },
-
-      showSettings() {
-        alert('Settings: Voice conversation powered by OpenAI Realtime API via WebRTC\n\nFor best results:\n• Use Chrome, Edge, or Safari\n• Ensure stable internet connection\n• Speak clearly at normal volume\n• Wait for AI to finish speaking before responding\n\nNote: Ephemeral tokens expire every minute for security');
       },
 
       addMessage(speaker, content, isUser = false) {
