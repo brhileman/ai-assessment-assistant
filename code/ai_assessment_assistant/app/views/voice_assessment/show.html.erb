@@ -423,6 +423,17 @@
                 temperature: 0.7
               }
             });
+            
+            // Trigger AI to start the conversation immediately
+            setTimeout(() => {
+              this.sendOpenAIEvent({
+                type: 'response.create',
+                response: {
+                  modalities: ['text', 'audio'],
+                  instructions: 'Begin the conversation with your opening greeting to start the assessment interview.'
+                }
+              });
+            }, 1000); // Small delay to ensure session is fully configured
           });
           
           // Create SDP offer
