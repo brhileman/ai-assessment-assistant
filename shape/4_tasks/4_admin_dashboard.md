@@ -59,14 +59,14 @@ Create the admin dashboard and company management interface with full CRUD opera
   - [x] 5.6 Test form submissions and validations
   - [x] 5.7 Add cancel/save actions with proper redirects
 
-- [ ] 6.0 Add Stakeholder Management (Basic)
-  - [ ] 6.1 Create stakeholder partial for company detail page
-  - [ ] 6.2 Add "Add Stakeholder" button and modal
-  - [ ] 6.3 Include stakeholder name, email, status in list
-  - [ ] 6.4 Add stakeholder status badges (invited, started, completed)
-  - [ ] 6.5 Show assessment completion dates
-  - [ ] 6.6 Add resend invitation action
-  - [ ] 6.7 Include delete stakeholder functionality
+- [x] 6.0 Add Stakeholder Management (Basic)
+  - [x] 6.1 Create stakeholder partial for company detail page
+  - [x] 6.2 Add "Add Stakeholder" button and modal
+  - [x] 6.3 Include stakeholder name, email, status in list
+  - [x] 6.4 Add stakeholder status badges (invited, started, completed)
+  - [x] 6.5 Show assessment completion dates
+  - [x] 6.6 Add resend invitation action
+  - [x] 6.7 Include delete stakeholder functionality
 
 - [ ] 7.0 Create Navigation and Layout
   - [ ] 7.1 Update admin layout with proper navigation
@@ -108,10 +108,13 @@ Create the admin dashboard and company management interface with full CRUD opera
 | `app/views/admin/companies/new.html.erb` | New company form | 5.1 | ✅ |
 | `app/views/admin/companies/edit.html.erb` | Edit company form | 5.3 | ✅ |
 | `app/views/admin/companies/_form.html.erb` | Company form partial | 5.1 | ✅ |
+| `app/controllers/admin/stakeholders_controller.rb` | Stakeholder CRUD controller | 6.0 | ✅ |
+| `app/views/admin/stakeholders/new.html.erb` | New stakeholder form | 6.2 | ✅ |
 | `app/views/admin/shared/_navigation.html.erb` | Admin navigation | 7.1 | ⏳ |
-| `app/views/admin/shared/_stakeholder.html.erb` | Stakeholder list item | 6.1 | ⏳ |
+| `app/views/admin/shared/_stakeholder.html.erb` | Stakeholder list item | 6.1 | ✅ |
 | `spec/controllers/admin/dashboard_controller_spec.rb` | Dashboard tests | 9.1 | ⏳ |
 | `spec/controllers/admin/companies_controller_spec.rb` | Company controller tests | 9.1 | ⏳ |
+| `spec/requests/admin/stakeholders_spec.rb` | Stakeholder controller tests | 6.0 | ✅ |
 | `spec/system/admin/company_management_spec.rb` | Company workflow tests | 9.2 | ⏳ |
 
 ### Files to Modify
