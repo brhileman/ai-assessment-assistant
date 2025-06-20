@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Find and open the most recent Letter Opener email
+latest_email=$(find tmp/letter_opener/ -name "rich.html" -exec ls -lt {} + | head -1 | awk '{print $NF}')
+
+if [ -n "$latest_email" ]; then
+  echo "Opening latest email: $latest_email"
+  open "$latest_email"
+else
+  echo "No emails found in tmp/letter_opener/"
+fi

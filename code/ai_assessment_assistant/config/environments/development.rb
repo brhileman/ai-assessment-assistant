@@ -31,10 +31,9 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Configure mailer for development (file-based for easy testing)
+  # Configure mailer for development (letter_opener opens emails in browser)
   config.action_mailer.raise_delivery_errors = true
-  config.action_mailer.delivery_method = :file
-  config.action_mailer.file_settings = { location: Rails.root.join('tmp/mail') }
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.perform_deliveries = true
   
   # SendGrid SMTP configuration (commented for development, use in production)
