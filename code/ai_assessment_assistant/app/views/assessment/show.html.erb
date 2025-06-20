@@ -36,16 +36,25 @@
         <%= form_with url: start_assessment_path(@stakeholder.invitation_token), 
             method: :post, 
             local: true,
+            id: "assessmentForm",
             class: "space-y-4" do |form| %>
           
-          <%= form.submit "Begin Assessment", 
-              class: "w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 
+          <button type="button" id="beginAssessmentBtn" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 
                      text-white font-semibold py-4 px-6 rounded-2xl shadow-lg 
                      transform hover:-translate-y-1 transition-all duration-200
-                     focus:outline-none focus:ring-4 focus:ring-blue-500/50" %>
+                     focus:outline-none focus:ring-4 focus:ring-blue-500/50">
+            <span id="btnText">Begin Assessment</span>
+            <span id="loadingSpinner" class="hidden">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Requesting microphone access...
+            </span>
+          </button>
         <% end %>
         
-        <p class="text-xs text-gray-400">
+        <p class="text-xs text-gray-400" id="statusMessage">
           By proceeding, you agree to participate in this assessment interview.
         </p>
       </div>
@@ -59,4 +68,70 @@
       </p>
     </div>
   </div>
-</div> 
+</div>
+
+<!-- JavaScript for Microphone Access -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const beginBtn = document.getElementById('beginAssessmentBtn');
+  const btnText = document.getElementById('btnText');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const statusMessage = document.getElementById('statusMessage');
+  const assessmentForm = document.getElementById('assessmentForm');
+  
+  beginBtn.addEventListener('click', async function() {
+    try {
+      // Update button to show loading state
+      btnText.classList.add('hidden');
+      loadingSpinner.classList.remove('hidden');
+      beginBtn.disabled = true;
+      statusMessage.textContent = 'Please allow microphone access when prompted...';
+      statusMessage.className = 'text-xs text-blue-300';
+      
+      // Request microphone access
+      console.log('🎤 Requesting microphone access...');
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          sampleRate: 24000,
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        } 
+      });
+      
+      console.log('✅ Microphone access granted!');
+      
+      // Clean up the stream (we just needed permission)
+      stream.getTracks().forEach(track => track.stop());
+      
+      // Update UI to show success
+      loadingSpinner.classList.add('hidden');
+      btnText.textContent = 'Starting Assessment...';
+      btnText.classList.remove('hidden');
+      statusMessage.textContent = 'Microphone access granted! Starting your assessment...';
+      statusMessage.className = 'text-xs text-green-300';
+      
+      // Small delay for user feedback, then submit form
+      setTimeout(() => {
+        assessmentForm.submit();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Microphone access denied or failed:', error);
+      
+      // Reset button state
+      btnText.classList.remove('hidden');
+      loadingSpinner.classList.add('hidden');
+      beginBtn.disabled = false;
+      
+      // Show error message
+      statusMessage.textContent = 'Microphone access is required for the voice assessment. Please allow access and try again.';
+      statusMessage.className = 'text-xs text-red-300';
+      
+      // Change button text to retry
+      btnText.textContent = 'Try Again - Allow Microphone';
+    }
+  });
+});
+</script> 
