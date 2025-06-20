@@ -1,4 +1,5 @@
 class VoiceAssessmentController < ApplicationController
+  layout 'public'
   before_action :find_stakeholder_by_token
   before_action :ensure_assessment_started
   before_action :check_assessment_not_completed

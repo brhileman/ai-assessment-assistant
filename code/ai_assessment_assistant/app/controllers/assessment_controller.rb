@@ -1,4 +1,5 @@
 class AssessmentController < ApplicationController
+  layout 'public'
   before_action :find_stakeholder_by_token
   
   def show
