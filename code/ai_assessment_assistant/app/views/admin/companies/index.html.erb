@@ -13,31 +13,7 @@
       </div>
     </div>
 
-    <!-- Search and Filter Section -->
-    <div class="bg-white rounded-lg shadow mb-6 p-6">
-      <%= form_with url: admin_companies_path, method: :get, local: true, class: "flex flex-col sm:flex-row gap-4" do |form| %>
-        <div class="flex-1">
-          <%= form.text_field :search, 
-                placeholder: "Search companies...", 
-                value: params[:search],
-                class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
-        </div>
-        <div class="sm:w-48">
-          <%= form.select :filter, 
-                options_for_select([
-                  ['All Companies', ''],
-                  ['With Completed Assessments', 'completed'],
-                  ['Pending Assessments', 'pending']
-                ], params[:filter]),
-                {},
-                { class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
-        </div>
-        <div class="flex gap-2">
-          <%= form.submit "Search", class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors" %>
-          <%= link_to "Clear", admin_companies_path, class: "bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium transition-colors" %>
-        </div>
-      <% end %>
-    </div>
+    <!-- Simple company list for MVP - no search/filter needed -->
 
     <!-- Companies Table -->
     <div class="bg-white shadow rounded-lg overflow-hidden">
@@ -105,16 +81,10 @@
       <% else %>
         <div class="text-center py-12">
           <div class="text-gray-500">
-            <% if params[:search].present? || params[:filter].present? %>
-              <h3 class="text-lg font-medium mb-2">No companies found</h3>
-              <p>Try adjusting your search or filter criteria</p>
-              <%= link_to "View all companies", admin_companies_path, class: "text-blue-600 hover:text-blue-800 mt-2 inline-block" %>
-            <% else %>
-              <h3 class="text-lg font-medium mb-2">No companies yet</h3>
-              <p class="mb-4">Get started by adding your first company</p>
-              <%= link_to new_admin_company_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" do %>
-                <span class="mr-2">+</span>Add Company
-              <% end %>
+            <h3 class="text-lg font-medium mb-2">No companies yet</h3>
+            <p class="mb-4">Get started by adding your first company</p>
+            <%= link_to new_admin_company_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" do %>
+              <span class="mr-2">+</span>Add Company
             <% end %>
           </div>
         </div>

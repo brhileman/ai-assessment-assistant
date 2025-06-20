@@ -4,21 +4,8 @@ class Admin::CompaniesController < ApplicationController
   before_action :set_company, only: [:show, :edit, :update, :destroy]
 
   def index
+    # Simple company list for MVP - no search/filter functionality needed
     @companies = Company.includes(:stakeholders, :assessments).order(:name)
-    
-    # Add search functionality
-    if params[:search].present?
-      @companies = @companies.where("name ILIKE ?", "%#{params[:search]}%")
-    end
-    
-    # Add filtering by completion status
-    case params[:filter]
-    when 'completed'
-      @companies = @companies.joins(:assessments).where(assessments: { completed_at: Time.current.beginning_of_day.. })
-    when 'pending'
-      @companies = @companies.left_joins(:assessments).where(assessments: { id: nil })
-        .or(@companies.joins(:assessments).where(assessments: { completed_at: nil }))
-    end
   end
 
   def show

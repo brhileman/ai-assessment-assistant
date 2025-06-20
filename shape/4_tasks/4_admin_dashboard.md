@@ -35,9 +35,9 @@ Create the admin dashboard and company management interface with full CRUD opera
 - [x] 3.0 Implement Company Index (List View)
   - [x] 3.1 Create companies index page with responsive table
   - [x] 3.2 Display company name, stakeholder count, completion rate
-  - [x] 3.3 Add search functionality for company names
-  - [x] 3.4 Add sorting by name, creation date, completion rate
-  - [x] 3.5 Add pagination for large company lists
+  - [~] 3.3 Add search functionality for company names *(DEFERRED for MVP - simple list sufficient)*
+  - [~] 3.4 Add sorting by name, creation date, completion rate *(DEFERRED for MVP - simple list sufficient)*
+  - [~] 3.5 Add pagination for large company lists *(DEFERRED for MVP - simple list sufficient)*
   - [x] 3.6 Include action buttons (view, edit, delete)
   - [x] 3.7 Style using design system light theme
 
@@ -77,21 +77,21 @@ Create the admin dashboard and company management interface with full CRUD opera
   - [ ] 7.6 Test navigation works across all admin pages
   - [ ] 7.7 Add active page highlighting
 
-- [ ] 8.0 Add Search and Filtering
-  - [ ] 8.1 Implement company name search
-  - [ ] 8.2 Add filter by completion status
-  - [ ] 8.3 Add filter by assessment activity (recent, stale)
-  - [ ] 8.4 Create filter UI components
-  - [ ] 8.5 Add clear filters functionality
-  - [ ] 8.6 Test search and filters work correctly
-  - [ ] 8.7 Add URL parameters for shareable filtered views
+- [~] 8.0 Add Search and Filtering *(DEFERRED for MVP)*
+  - [~] 8.1 Implement company name search *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.2 Add filter by completion status *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.3 Add filter by assessment activity (recent, stale) *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.4 Create filter UI components *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.5 Add clear filters functionality *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.6 Test search and filters work correctly *(Not needed for MVP - simple list sufficient)*
+  - [~] 8.7 Add URL parameters for shareable filtered views *(Not needed for MVP - simple list sufficient)*
 
 - [ ] 9.0 Testing and Validation
   - [ ] 9.1 Write controller tests for all admin actions
   - [ ] 9.2 Create system tests for complete workflows
   - [ ] 9.3 Test admin authentication on all pages
   - [ ] 9.4 Verify responsive design on mobile devices
-  - [ ] 9.5 Test search and filtering functionality
+  - [~] 9.5 Test search and filtering functionality *(DEFERRED for MVP - simple list sufficient)*
   - [ ] 9.6 Validate proper error handling
   - [ ] 9.7 Test accessibility compliance
 
@@ -163,7 +163,7 @@ Create the admin dashboard and company management interface with full CRUD opera
 - [ ] Admin dashboard provides clear overview of system status
 - [ ] Company CRUD operations work flawlessly
 - [ ] Stakeholder management integrates seamlessly
-- [ ] Search and filtering improve usability
+- [~] Search and filtering improve usability *(DEFERRED for MVP - simple list sufficient)*
 - [ ] Responsive design works on all devices
 - [ ] Authentication protects all admin routes
 - [ ] All tests pass including system tests
