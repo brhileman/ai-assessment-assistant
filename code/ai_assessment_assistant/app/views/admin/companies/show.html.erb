@@ -122,8 +122,11 @@
                     
                     <div class="ml-4 flex space-x-2">
                       <% unless stakeholder.assessment&.completed_at %>
-                        <%= link_to "#", class: "text-xs text-blue-600 hover:text-blue-800", 
-                              title: "Resend invitation email (coming in Task 5)" do %>
+                        <%= link_to resend_invitation_admin_company_stakeholder_path(@company, stakeholder), 
+                              method: :post,
+                              class: "text-xs text-blue-600 hover:text-blue-800", 
+                              title: "Resend invitation email",
+                              confirm: "Resend invitation email to #{stakeholder.email}?" do %>
                           Resend
                         <% end %>
                       <% end %>

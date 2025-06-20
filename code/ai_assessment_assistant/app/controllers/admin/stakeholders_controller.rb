@@ -1,7 +1,7 @@
 class Admin::StakeholdersController < ApplicationController
   before_action :authenticate_admin!
   before_action :find_company
-  before_action :find_stakeholder, only: [:destroy]
+  before_action :find_stakeholder, only: [:destroy, :resend_invitation]
   layout 'admin'
 
   def new
@@ -15,15 +15,31 @@ class Admin::StakeholdersController < ApplicationController
       # Create associated assessment
       @stakeholder.create_assessment!
       
-      # Send invitation email (placeholder for now)
-      # TODO: Implement email invitation in Task 5
-      # Note: Stakeholder is already marked as 'invited' by default
+      # Send invitation email
+      begin
+        AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+        flash[:notice] = "Stakeholder #{@stakeholder.name} has been added and invitation email sent to #{@stakeholder.email}."
+      rescue => e
+        Rails.logger.error "Failed to send invitation email to #{@stakeholder.email}: #{e.message}"
+        flash[:notice] = "Stakeholder #{@stakeholder.name} has been added, but there was an issue sending the invitation email. Please try resending."
+      end
       
-      flash[:notice] = "Stakeholder #{@stakeholder.name} has been added and invitation sent."
       redirect_to admin_company_path(@company)
     else
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def resend_invitation
+    begin
+      AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+      flash[:notice] = "Invitation email resent to #{@stakeholder.name} (#{@stakeholder.email})."
+    rescue => e
+      Rails.logger.error "Failed to resend invitation email to #{@stakeholder.email}: #{e.message}"
+      flash[:alert] = "Failed to resend invitation email. Please try again or contact support."
+    end
+    
+    redirect_to admin_company_path(@company)
   end
 
   def destroy

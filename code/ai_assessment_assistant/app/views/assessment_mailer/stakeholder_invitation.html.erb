@@ -1,0 +1,34 @@
+<% content_for :title, "You're invited to complete an AI Assessment for #{@company.name}" %>
+
+<h1>Hi <%= @stakeholder.name %>,</h1>
+
+<p>You've been invited by <strong><%= @company.name %></strong> to participate in an AI readiness assessment.</p>
+
+<% if @company.custom_instructions.present? %>
+  <div class="company-context">
+    <strong>About this assessment:</strong>
+    <%= simple_format(@company.custom_instructions) %>
+  </div>
+<% end %>
+
+<div class="cta-section">
+  <%= link_to "Start Your Assessment", @assessment_url, class: "btn btn-primary" %>
+</div>
+
+<div class="assessment-info">
+  <p><strong>What to expect:</strong></p>
+  <ul style="margin: 16px 0; padding-left: 24px; color: #1e40af;">
+    <li style="margin-bottom: 8px;">A conversational AI interview about your role and technology usage</li>
+    <li style="margin-bottom: 8px;">Approximately 10-15 minutes to complete</li>
+    <li style="margin-bottom: 8px;">Voice-based interaction - no typing required</li>
+    <li style="margin-bottom: 8px;">Your responses help <%= @company.name %> understand AI readiness opportunities</li>
+  </ul>
+</div>
+
+<p>This assessment is conducted by LaunchPad Lab, a leading AI consultancy, to help organizations understand their AI readiness and identify strategic opportunities.</p>
+
+<p>Your participation is valuable and your responses will be kept confidential. The results will be aggregated and used to provide <%= @company.name %> with insights and recommendations.</p>
+
+<p style="margin-top: 32px; color: #6b7280; font-size: 14px;">
+  <em>If you have any questions about this assessment or need assistance, please don't hesitate to reach out.</em>
+</p>

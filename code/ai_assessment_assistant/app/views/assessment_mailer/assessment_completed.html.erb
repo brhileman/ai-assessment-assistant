@@ -1,0 +1,40 @@
+<% content_for :title, "Thank you for completing your AI Assessment" %>
+
+<h1>Thank you, <%= @stakeholder.name %>!</h1>
+
+<p>You've successfully completed the AI readiness assessment for <strong><%= @company.name %></strong>.</p>
+
+<div class="assessment-summary">
+  <p><strong>Assessment completed:</strong> <%= @assessment.completed_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+  <% if @assessment.duration_minutes %>
+    <p><strong>Duration:</strong> <%= @assessment.duration_minutes %> minutes</p>
+  <% end %>
+</div>
+
+<p>Your insights are incredibly valuable and will help <%= @company.name %> better understand their AI readiness and identify strategic opportunities for growth.</p>
+
+<h2>What happens next?</h2>
+
+<div class="assessment-info">
+  <ul style="margin: 16px 0; padding-left: 24px; color: #1e40af;">
+    <li style="margin-bottom: 8px;">The LaunchPad Lab team will analyze all stakeholder responses</li>
+    <li style="margin-bottom: 8px;">We'll identify patterns, opportunities, and potential challenges</li>
+    <li style="margin-bottom: 8px;"><%= @company.name %> will receive comprehensive recommendations</li>
+    <li style="margin-bottom: 8px;">Results will help guide their AI strategy and implementation planning</li>
+  </ul>
+</div>
+
+<p>Your thoughtful responses, combined with insights from other stakeholders, will provide <%= @company.name %> with a clear picture of their current AI landscape and a roadmap for the future.</p>
+
+<% if @company.custom_instructions.present? %>
+  <div class="company-context">
+    <strong>Assessment Context:</strong>
+    <%= simple_format(@company.custom_instructions) %>
+  </div>
+<% end %>
+
+<p>If you have any follow-up questions about your assessment or would like to learn more about LaunchPad Lab's AI consulting services, we'd love to hear from you.</p>
+
+<p style="margin-top: 32px; color: #6b7280; font-size: 14px;">
+  <em>Thank you again for your time and valuable insights. Your participation makes a real difference in helping organizations successfully navigate their AI journey.</em>
+</p>
