@@ -7,7 +7,8 @@ RSpec.describe "Admin::Companies", type: :request do
   let(:invalid_attributes) { { name: "" } }
 
   before do
-    sign_in admin
+    # For magic link authentication, we need to manually set the session
+    sign_in admin, scope: :admin
   end
 
   describe "GET /admin/companies" do
