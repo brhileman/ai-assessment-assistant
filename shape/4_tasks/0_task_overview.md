@@ -81,6 +81,15 @@ Company (name, custom_instructions)
 - **Essential Security Only**: No over-engineering for MVP
 - **Manual Admin Management**: Seeds/console creation vs. registration flow
 
+### MVP Scope Restrictions Applied
+Features marked as **[~] DEFERRED for MVP** based on user story decisions:
+- **Company Management**: No search/filtering (Task 4) ✅ Applied
+- **Stakeholder Landing**: No complex analytics, no assessment resumption (Task 6) ✅ Applied  
+- **Assessment Results**: No search, no admin comments, no advanced analytics (Task 9) ⚠️  Pending
+- **Voice Assessment**: No pause functionality (already aligned in Task 7) ✅ Aligned
+- **Admin Authentication**: No rate limiting, no activity logging (already aligned) ✅ Aligned
+- **Stakeholder Invitations**: No reminder emails (already aligned in Task 5) ✅ Aligned
+
 ### Quality Standards
 - **Rails Conventions**: Follow standard practices with RSpec tests
 - **Small Methods**: Under 10 lines, use POROs if needed

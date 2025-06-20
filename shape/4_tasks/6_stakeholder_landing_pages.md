@@ -51,16 +51,16 @@ Create the stakeholder-facing landing pages and assessment entry flow. This incl
   - [ ] 5.1 Track assessment start time and status
   - [ ] 5.2 Update stakeholder status to "assessment_started"
   - [ ] 5.3 Prevent multiple simultaneous assessments
-  - [ ] 5.4 Handle assessment resumption (if applicable)
-  - [ ] 5.5 Add assessment abandonment tracking
-  - [ ] 5.6 Create status indicators for admins
+  - [~] 5.4 Handle assessment resumption (if applicable) *(DEFERRED for MVP - one-shot assessments)*
+  - [~] 5.5 Add assessment abandonment tracking *(Future enhancement)*
+  - [x] 5.6 Create status indicators for admins
   - [ ] 5.7 Test status updates and transitions
 
 - [ ] 6.0 Implement Error Handling and Fallbacks
   - [ ] 6.1 Create custom error pages for common issues
   - [ ] 6.2 Handle technical incompatibility gracefully
   - [ ] 6.3 Add fallback contact options
-  - [ ] 6.4 Include alternative assessment methods if needed
+  - [~] 6.4 Include alternative assessment methods if needed *(DEFERRED for MVP - voice-only focus)*
   - [ ] 6.5 Create clear error messaging
   - [ ] 6.6 Add automatic error reporting to admins
   - [ ] 6.7 Test error scenarios and recovery paths
@@ -74,14 +74,14 @@ Create the stakeholder-facing landing pages and assessment entry flow. This incl
   - [ ] 7.6 Ensure consistent experience across screen sizes
   - [ ] 7.7 Validate accessibility on mobile devices
 
-- [ ] 8.0 Add Analytics and Tracking
-  - [ ] 8.1 Track landing page visits and conversions
-  - [ ] 8.2 Monitor assessment start rates
-  - [ ] 8.3 Track technical issues and failures
-  - [ ] 8.4 Add funnel analysis for drop-off points
-  - [ ] 8.5 Monitor browser and device compatibility
-  - [ ] 8.6 Create admin dashboard for conversion metrics
-  - [ ] 8.7 Test analytics data collection and reporting
+- [~] 8.0 Add Analytics and Tracking *(DEFERRED for MVP)*
+  - [~] 8.1 Track landing page visits and conversions *(Future enhancement)*
+  - [~] 8.2 Monitor assessment start rates *(Future enhancement)*
+  - [x] 8.3 Track technical issues and failures *(Basic error logging only)*
+  - [~] 8.4 Add funnel analysis for drop-off points *(Future enhancement)*
+  - [~] 8.5 Monitor browser and device compatibility *(Future enhancement)*
+  - [~] 8.6 Create admin dashboard for conversion metrics *(Future enhancement)*
+  - [~] 8.7 Test analytics data collection and reporting *(Future enhancement)*
 
 - [ ] 9.0 Testing and Quality Assurance
   - [ ] 9.1 Write controller tests for all stakeholder actions

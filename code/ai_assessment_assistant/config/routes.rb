@@ -18,9 +18,16 @@ Rails.application.routes.draw do
   namespace :admin do
     root 'dashboard#index'
     resources :companies do
-      resources :stakeholders, only: [:new, :create, :destroy]
+      resources :stakeholders, only: [:new, :create, :destroy] do
+        member do
+          post :resend_invitation
+        end
+      end
     end
   end
+  
+  # Stakeholder assessment routes (public-facing)
+  get '/assessment/:token', to: 'assessments#show', as: 'stakeholder_assessment'
   
   # Welcome page routes
   root "pages#welcome"

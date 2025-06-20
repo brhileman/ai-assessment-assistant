@@ -1,0 +1,29 @@
+You're invited to complete an AI Assessment for <%= @company.name %>
+
+Hi <%= @stakeholder.name %>,
+
+You've been invited by <%= @company.name %> to participate in an AI readiness assessment.
+
+<% if @company.custom_instructions.present? %>
+About this assessment:
+<%= @company.custom_instructions %>
+
+<% end %>
+START YOUR ASSESSMENT:
+<%= @assessment_url %>
+
+What to expect:
+• A conversational AI interview about your role and technology usage
+• Approximately 10-15 minutes to complete  
+• Voice-based interaction - no typing required
+• Your responses help <%= @company.name %> understand AI readiness opportunities
+
+This assessment is conducted by LaunchPad Lab, a leading AI consultancy, to help organizations understand their AI readiness and identify strategic opportunities.
+
+Your participation is valuable and your responses will be kept confidential. The results will be aggregated and used to provide <%= @company.name %> with insights and recommendations.
+
+If you have any questions about this assessment or need assistance, please don't hesitate to reach out.
+
+---
+LaunchPad Lab
+Questions? Contact us at assessment@launchpadlab.com

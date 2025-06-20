@@ -1,0 +1,31 @@
+Thank you for completing your AI Assessment
+
+Thank you, <%= @stakeholder.name %>!
+
+You've successfully completed the AI readiness assessment for <%= @company.name %>.
+
+Assessment completed: <%= @assessment.completed_at.strftime("%B %d, %Y at %I:%M %p") %>
+<% if @assessment.duration_minutes %>Duration: <%= @assessment.duration_minutes %> minutes<% end %>
+
+Your insights are incredibly valuable and will help <%= @company.name %> better understand their AI readiness and identify strategic opportunities for growth.
+
+What happens next?
+• The LaunchPad Lab team will analyze all stakeholder responses
+• We'll identify patterns, opportunities, and potential challenges  
+• <%= @company.name %> will receive comprehensive recommendations
+• Results will help guide their AI strategy and implementation planning
+
+Your thoughtful responses, combined with insights from other stakeholders, will provide <%= @company.name %> with a clear picture of their current AI landscape and a roadmap for the future.
+
+<% if @company.custom_instructions.present? %>
+Assessment Context:
+<%= @company.custom_instructions %>
+
+<% end %>
+If you have any follow-up questions about your assessment or would like to learn more about LaunchPad Lab's AI consulting services, we'd love to hear from you.
+
+Thank you again for your time and valuable insights. Your participation makes a real difference in helping organizations successfully navigate their AI journey.
+
+---
+LaunchPad Lab
+Questions? Contact us at assessment@launchpadlab.com
