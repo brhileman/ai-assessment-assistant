@@ -87,12 +87,21 @@
         </svg>
       </button>
       
-      <!-- Main Microphone Button -->
-      <button id="microphoneButton" class="control-button w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1">
-        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
-        </svg>
-      </button>
+      <!-- Connection Status Indicator (replaces microphone button) -->
+      <div id="connectionStatus" class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20">
+        <!-- Connecting State (default) -->
+        <div id="connectingSpinner" class="animate-spin w-8 h-8">
+          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+        </div>
+        <!-- Connected State (hidden initially) -->
+        <div id="connectedMic" class="hidden w-8 h-8">
+          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+          </svg>
+        </div>
+      </div>
       
       <!-- End Assessment Button -->
       <button id="finishButton" class="control-button w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center border border-red-400/30 hover:bg-red-500/30 transition-all duration-300">
@@ -105,8 +114,8 @@
     
     <!-- Helper Text -->
     <div class="text-center mt-6">
-      <p class="text-gray-400 text-xs">
-        Tap the microphone to continue • Tap X to finish
+      <p class="text-gray-400 text-xs" id="statusText">
+        Connecting... Please allow microphone access when prompted
       </p>
     </div>
     
@@ -169,7 +178,10 @@
         this.finishButton = document.getElementById('finishButton');
         this.modal = document.getElementById('confirmModal');
         this.cancelButton = document.getElementById('cancelButton');
-        this.microphoneButton = document.getElementById('microphoneButton');
+        this.connectionStatus = document.getElementById('connectionStatus');
+        this.connectingSpinner = document.getElementById('connectingSpinner');
+        this.connectedMic = document.getElementById('connectedMic');
+        this.statusText = document.getElementById('statusText');
         this.settingsButton = document.getElementById('settingsButton');
         this.transcriptContainer = document.getElementById('transcriptContainer');
         this.transcriptMessages = document.getElementById('transcriptMessages');
@@ -196,7 +208,6 @@
       setupEventListeners() {
         this.finishButton.addEventListener('click', () => this.showConfirmModal());
         this.cancelButton.addEventListener('click', () => this.hideConfirmModal());
-        this.microphoneButton.addEventListener('click', () => this.toggleVoiceConversation());
         this.settingsButton.addEventListener('click', () => this.showSettings());
         this.settingsButton.addEventListener('dblclick', () => this.testTextInput());
         
@@ -359,9 +370,34 @@
           // Get WebRTC configuration with ephemeral token
           await this.getWebRTCConfig();
           
+          // Auto-start the voice conversation
+          await this.startVoiceConversation();
+          
         } catch (error) {
           console.error('Error initializing voice session:', error);
+          this.updateConnectionStatus('error', 'Connection failed. Please refresh and try again.');
           this.addMessage('System', 'Voice session initialization failed. Please refresh the page and try again.', false);
+        }
+      },
+
+      updateConnectionStatus(state, message) {
+        switch (state) {
+          case 'connecting':
+            this.connectingSpinner.classList.remove('hidden');
+            this.connectedMic.classList.add('hidden');
+            this.statusText.textContent = message || 'Connecting... Please allow microphone access when prompted';
+            break;
+          case 'connected':
+            this.connectingSpinner.classList.add('hidden');
+            this.connectedMic.classList.remove('hidden');
+            this.statusText.textContent = message || 'Connected - Conversation in progress • Tap X to finish';
+            break;
+          case 'error':
+            this.connectingSpinner.classList.add('hidden');
+            this.connectedMic.classList.add('hidden');
+            this.statusText.textContent = message || 'Connection error';
+            this.statusText.className = 'text-red-400 text-xs';
+            break;
         }
       },
 
@@ -388,18 +424,10 @@
         }
       },
 
-      // Enhanced microphone toggle with proper WebRTC
-      async toggleVoiceConversation() {
-        if (!this.isConnected) {
-          await this.startVoiceConversation();
-        } else {
-          await this.stopVoiceConversation();
-        }
-      },
-
       async startVoiceConversation() {
         try {
           console.log('🎤 Starting WebRTC voice conversation...');
+          this.updateConnectionStatus('connecting', 'Requesting microphone access...');
           
           if (!this.webrtcConfig) {
             await this.getWebRTCConfig();
@@ -437,6 +465,8 @@
               autoGainControl: true
             } 
           });
+          
+          this.updateConnectionStatus('connecting', 'Connecting to AI assistant...');
           
           // Add local audio track to peer connection
           this.mediaStream.getTracks().forEach(track => {
@@ -502,15 +532,15 @@
           
           await this.peerConnection.setRemoteDescription(answer);
           
-          // Update UI
+          // Update UI to connected state
           this.isConnected = true;
-          this.microphoneButton.classList.add('recording-pulse');
-          this.microphoneButton.style.backgroundColor = '#ef4444'; // Red when recording
+          this.updateConnectionStatus('connected');
           
           console.log('✅ WebRTC voice conversation started successfully!');
           
         } catch (error) {
           console.error('Error starting WebRTC voice conversation:', error);
+          this.updateConnectionStatus('error', `Failed to start conversation: ${error.message}`);
           this.addMessage('System', `Failed to start voice conversation: ${error.message}. Please check microphone permissions and try again.`, false);
         }
       },
@@ -599,10 +629,9 @@
           this.audioElement = null;
         }
         
-        // Update UI
+        // Update UI to disconnected state
         this.isConnected = false;
-        this.microphoneButton.classList.remove('recording-pulse');
-        this.microphoneButton.style.backgroundColor = '';
+        this.updateConnectionStatus('connecting', 'Conversation ended');
         
         console.log('✅ WebRTC voice conversation stopped');
       },
