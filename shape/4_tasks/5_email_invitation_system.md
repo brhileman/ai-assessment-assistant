@@ -73,14 +73,14 @@ Implement the complete email invitation system using SendGrid for stakeholder in
   - [x] 7.6 Test completion email delivery
   - [x] 7.7 Ensure emails reflect company branding context
 
-- [ ] 8.0 Add Email Analytics and Tracking
-  - [ ] 8.1 Implement SendGrid event webhooks
-  - [ ] 8.2 Track email opens, clicks, and bounces
-  - [ ] 8.3 Add analytics dashboard for email performance
-  - [ ] 8.4 Create reports for invitation effectiveness
-  - [ ] 8.5 Add admin alerts for high bounce rates
-  - [ ] 8.6 Test webhook processing and data storage
-  - [ ] 8.7 Validate analytics accuracy
+- [~] 8.0 Add Email Analytics and Tracking *(DEFERRED for MVP)*
+  - [~] 8.1 Implement SendGrid event webhooks *(Future enhancement)*
+  - [~] 8.2 Track email opens, clicks, and bounces *(Future enhancement)*
+  - [~] 8.3 Add analytics dashboard for email performance *(Future enhancement)*
+  - [~] 8.4 Create reports for invitation effectiveness *(Future enhancement)*
+  - [~] 8.5 Add admin alerts for high bounce rates *(Future enhancement)*
+  - [~] 8.6 Test webhook processing and data storage *(Future enhancement)*
+  - [~] 8.7 Validate analytics accuracy *(Future enhancement)*
 
 - [x] 9.0 Testing and Security
   - [x] 9.1 Write unit tests for all mailer methods
