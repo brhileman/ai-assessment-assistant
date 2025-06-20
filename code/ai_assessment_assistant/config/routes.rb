@@ -4,12 +4,15 @@ Rails.application.routes.draw do
     magic_links: 'admins/magic_links'
   }
   
-  # Manual magic link routes for custom flow
+  # Custom magic link routes for our flow
   scope :admins do
     get 'magic_link/new', to: 'admins/magic_links#new', as: 'new_admin_magic_link'
     post 'magic_link', to: 'admins/magic_links#create', as: 'admin_magic_links'
     get 'magic_link/sent', to: 'admins/magic_links#show', as: 'admin_magic_link_sent'
   end
+  
+  # Magic link authentication route (used in emails)
+  get '/admin_magic_link_auth', to: 'admins/magic_links#verify', as: 'admin_magic_link_auth'
   
   # Admin routes
   namespace :admin do

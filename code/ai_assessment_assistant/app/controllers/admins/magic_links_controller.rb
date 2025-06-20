@@ -21,6 +21,33 @@ class Admins::MagicLinksController < ApplicationController
     # Show the "magic link sent" confirmation page
   end
   
+  def verify
+    token = params[:admin_magic_link_token]
+    remember_me = params[:remember_me]
+    
+    if token.blank?
+      redirect_to new_admin_magic_link_path, alert: 'Invalid magic link. Please request a new one.'
+      return
+    end
+    
+    # Find admin by magic link token
+    admin = Admin.find_by(magic_link_token: Devise.token_generator.digest(Admin, :magic_link_token, token))
+    
+    if admin.nil?
+      redirect_to new_admin_magic_link_path, alert: 'Invalid magic link. Please request a new one.'
+    elsif admin.magic_link_expired?
+      redirect_to new_admin_magic_link_path, alert: 'Magic link has expired. Please request a new one.'
+    else
+      # Sign in the admin
+      sign_in(admin, remember: remember_me == '1')
+      
+      # Clear the magic link token so it can't be used again
+      admin.update!(magic_link_token: nil, magic_link_sent_at: nil)
+      
+      redirect_to admin_root_path, notice: 'Successfully signed in!'
+    end
+  end
+  
   private
   
   def admin_params
