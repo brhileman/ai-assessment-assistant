@@ -1,0 +1,111 @@
+<!-- AI Assessment Assistant Welcome Page -->
+<div class="min-h-screen bg-white">
+  <!-- Navigation Header -->
+  <nav class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-8" %>
+        </div>
+        
+        <!-- Navigation Links -->
+        <div class="flex items-center space-x-4">
+          <a href="#" class="text-gray-600 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+            About
+          </a>
+          <%= link_to "Admin Login", new_admin_magic_link_path, 
+              class: "bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center">
+      <!-- Hero Section -->
+      <div class="max-w-3xl mx-auto">
+        <h1 class="text-4xl font-bold text-gray-900 sm:text-5xl">
+          AI Assessment Assistant
+        </h1>
+        <p class="mt-6 text-xl text-gray-600 leading-relaxed">
+          Streamline your AI readiness evaluation with voice-powered assessments. 
+          Gather comprehensive insights from stakeholders through conversational AI interviews.
+        </p>
+        
+        <!-- Features Grid -->
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Voice Assessments</h3>
+            <p class="text-gray-600">Natural conversation-based evaluations using OpenAI's advanced voice technology.</p>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Real-time Transcripts</h3>
+            <p class="text-gray-600">Live conversation transcripts for transparency and accurate record-keeping.</p>
+          </div>
+          
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a4 4 0 118 0v4m-4 9v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">Secure & Compliant</h3>
+            <p class="text-gray-600">Enterprise-grade security with encrypted data transmission and storage.</p>
+          </div>
+        </div>
+        
+        <!-- CTA Section -->
+        <div class="mt-16 bg-blue-50 rounded-lg p-8">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Ready to get started?</h2>
+          <p class="text-gray-600 mb-6">
+            Contact LaunchPad Lab to set up your AI assessment program and begin evaluating your organization's AI readiness.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="mailto:assessment@launchpadlab.com" 
+               class="bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors">
+              Contact Us
+            </a>
+            <a href="#" 
+               class="border border-blue-600 text-blue-600 px-6 py-3 rounded-md font-medium hover:bg-blue-50 transition-colors">
+              Learn More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-50 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center mb-4 md:mb-0">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-6 mr-4" %>
+          <p class="text-gray-600 text-sm">© 2024 LaunchPad Lab. AI Assessment Assistant.</p>
+        </div>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">Privacy Policy</a>
+          <a href="#" class="text-gray-600 hover:text-blue-600 text-sm">Terms of Service</a>
+          <a href="mailto:assessment@launchpadlab.com" class="text-gray-600 hover:text-blue-600 text-sm">Support</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>

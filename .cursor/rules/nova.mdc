@@ -14,17 +14,15 @@ alwaysApply: true
 You are working in a Nova project that follows a structured product development workflow from abstract ideas to concrete implementation.
 
 ## Project Structure
-- `shape/` - Product documentation (no code here) - **Has its own git repository**
+- `shape/` - Product documentation (no code here) 
   - `1_big-picture/` - PRD, flowchart
   - `2_user-stories/` - User stories and their acceptance criteria  
   - `3_design-system/` - UI/UX standards and components
   - `4_tasks/` - Implementation tasks with progress tracking
-- `code/` - Application implementation - **Each app within has its own git repository**
+- `code/` - Application implementation 
 
 ## Git Repository Structure
-- The `shape/` folder maintains its own git repository for tracking product documentation changes
-- Each application within the `code/` folder has its own separate git repository
-- This separation allows for independent version control of documentation and individual applications
+- Everything should be contained in one repo
 
 ## Workflow
 1. **Big Picture**: Define PRD and flowchart

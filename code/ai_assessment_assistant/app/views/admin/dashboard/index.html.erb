@@ -1,0 +1,109 @@
+<%# Admin Dashboard %>
+<div class="min-h-screen bg-gray-50">
+  <!-- Admin Navigation -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo and Title -->
+        <div class="flex items-center">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-8 mr-4" %>
+          <h1 class="text-xl font-semibold text-gray-900">
+            AI Assessment Assistant - Admin
+          </h1>
+        </div>
+        
+        <!-- Admin Info and Logout -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-600">
+            Welcome, <%= @admin.email %>
+          </span>
+          <%= link_to "Logout", destroy_admin_session_path, method: :delete,
+              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700" %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Welcome Card -->
+      <div class="bg-white overflow-hidden shadow rounded-lg mb-6">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">
+            Welcome to the Admin Dashboard
+          </h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Manage AI assessments, companies, and stakeholders from this central hub.
+          </p>
+          
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-14 0h2m-2 0h-2m2 0h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-blue-600">Companies</p>
+                  <p class="text-lg font-semibold text-blue-900">0</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-green-600">Stakeholders</p>
+                  <p class="text-lg font-semibold text-green-900">0</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-purple-50 p-4 rounded-lg">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm font-medium text-purple-600">Assessments</p>
+                  <p class="text-lg font-semibold text-purple-900">0</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Coming Soon -->
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="px-4 py-5 sm:p-6">
+          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">
+            Coming Soon
+          </h3>
+          <p class="text-sm text-gray-600 mb-4">
+            Additional admin features will be available in upcoming tasks:
+          </p>
+          
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li>• Company and stakeholder management</li>
+            <li>• Assessment creation and monitoring</li>
+            <li>• Voice assessment interface</li>
+            <li>• Results dashboard and analytics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+</div> 
