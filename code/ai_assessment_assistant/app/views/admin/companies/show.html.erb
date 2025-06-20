@@ -1,0 +1,255 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4">
+        <li>
+          <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
+            Dashboard
+          <% end %>
+        </li>
+        <li>
+          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </li>
+        <li>
+          <%= link_to admin_companies_path, class: "text-gray-400 hover:text-gray-500" do %>
+            Companies
+          <% end %>
+        </li>
+        <li>
+          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </li>
+        <li class="text-gray-500"><%= @company.name %></li>
+      </ol>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="mb-8">
+      <div class="flex justify-between items-start">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900"><%= @company.name %></h1>
+          <p class="mt-2 text-gray-600">Company assessment dashboard and stakeholder management</p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to edit_admin_company_path(@company), class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
+            Edit Company
+          <% end %>
+          <%= link_to new_admin_company_stakeholder_path(@company), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors" do %>
+            Add Stakeholder
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-2xl font-bold text-blue-600"><%= @stakeholders.count %></div>
+        <div class="text-gray-600">Total Stakeholders</div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-2xl font-bold text-green-600"><%= @company.assessments.completed.count %></div>
+        <div class="text-gray-600">Completed Assessments</div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-2xl font-bold text-yellow-600"><%= @stakeholders.joins(:assessment).where(assessments: { completed_at: nil }).count %></div>
+        <div class="text-gray-600">In Progress</div>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow">
+        <div class="text-2xl font-bold text-purple-600"><%= @completion_rate %>%</div>
+        <div class="text-gray-600">Completion Rate</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Stakeholders Section -->
+      <div class="lg:col-span-2">
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex justify-between items-center">
+              <h2 class="text-lg font-semibold text-gray-900">Stakeholders</h2>
+              <%= link_to new_admin_company_stakeholder_path(@company), class: "text-sm bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition-colors" do %>
+                + Add Stakeholder
+              <% end %>
+            </div>
+          </div>
+          
+          <% if @stakeholders.any? %>
+            <div class="divide-y divide-gray-200">
+              <% @stakeholders.each do |stakeholder| %>
+                <div class="px-6 py-4">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center">
+                        <div class="flex-1">
+                          <h3 class="text-sm font-medium text-gray-900"><%= stakeholder.name %></h3>
+                          <p class="text-sm text-gray-500"><%= stakeholder.email %></p>
+                        </div>
+                        <div class="ml-4">
+                          <% if stakeholder.assessment&.completed_at %>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                              Completed
+                            </span>
+                          <% elsif stakeholder.assessment %>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                              In Progress
+                            </span>
+                          <% else %>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                              Invited
+                            </span>
+                          <% end %>
+                        </div>
+                      </div>
+                      
+                      <% if stakeholder.assessment&.completed_at %>
+                        <div class="mt-2 text-xs text-gray-500">
+                          Completed <%= time_ago_in_words(stakeholder.assessment.completed_at) %> ago
+                          <% if stakeholder.assessment.duration_minutes %>
+                            • <%= stakeholder.assessment.duration_minutes %> minutes
+                          <% end %>
+                        </div>
+                      <% elsif stakeholder.invitation_sent_at %>
+                        <div class="mt-2 text-xs text-gray-500">
+                          Invited <%= time_ago_in_words(stakeholder.invitation_sent_at) %> ago
+                        </div>
+                      <% end %>
+                    </div>
+                    
+                    <div class="ml-4 flex space-x-2">
+                      <% unless stakeholder.assessment&.completed_at %>
+                        <%= link_to "#", class: "text-xs text-blue-600 hover:text-blue-800", 
+                              title: "Resend invitation email (coming in Task 5)" do %>
+                          Resend
+                        <% end %>
+                      <% end %>
+                      <% if stakeholder.assessment %>
+                        <%= link_to "#", class: "text-xs text-green-600 hover:text-green-800",
+                              title: "View assessment results (coming in Task 8)" do %>
+                          View
+                        <% end %>
+                      <% end %>
+                      <%= link_to admin_company_stakeholder_path(@company, stakeholder), 
+                            method: :delete,
+                            confirm: "Are you sure you want to remove #{stakeholder.name}? This will also delete their assessment data.",
+                            class: "text-xs text-red-600 hover:text-red-800" do %>
+                        Remove
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="px-6 py-12 text-center">
+              <div class="text-gray-500">
+                <h3 class="text-lg font-medium mb-2">No stakeholders yet</h3>
+                <p class="mb-4">Add stakeholders to start sending assessment invitations</p>
+                <%= link_to new_admin_company_stakeholder_path(@company), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors" do %>
+                  Add First Stakeholder
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Company Information & Recent Activity -->
+      <div class="space-y-6">
+        <!-- Company Details -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Company Information</h2>
+          </div>
+          <div class="px-6 py-4">
+            <dl class="space-y-4">
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Company Name</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @company.name %></dd>
+              </div>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Created</dt>
+                <dd class="mt-1 text-sm text-gray-900"><%= @company.created_at.strftime("%B %d, %Y") %></dd>
+              </div>
+              <% if @company.custom_instructions.present? %>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">AI Agent Instructions</dt>
+                  <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap"><%= truncate(@company.custom_instructions, length: 200) %></dd>
+                  <% if @company.custom_instructions.length > 200 %>
+                    <button class="mt-1 text-sm text-blue-600 hover:text-blue-800">Show full instructions</button>
+                  <% end %>
+                </div>
+              <% else %>
+                <div>
+                  <dt class="text-sm font-medium text-gray-500">AI Agent Instructions</dt>
+                  <dd class="mt-1 text-sm text-gray-500 italic">Using default instructions</dd>
+                </div>
+              <% end %>
+            </dl>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Recent Activity</h2>
+          </div>
+          <div class="px-6 py-4">
+            <% if @recent_assessments.any? %>
+              <div class="space-y-3">
+                <% @recent_assessments.each do |assessment| %>
+                  <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0">
+                      <div class="h-2 w-2 bg-green-400 rounded-full mt-2"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm text-gray-900">
+                        <span class="font-medium"><%= assessment.stakeholder.name %></span>
+                        completed assessment
+                      </p>
+                      <p class="text-xs text-gray-500">
+                        <%= time_ago_in_words(assessment.completed_at) %> ago
+                        <% if assessment.duration_minutes %>
+                          • <%= assessment.duration_minutes %> minutes
+                        <% end %>
+                      </p>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-sm text-gray-500">No recent activity</p>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+          </div>
+          <div class="px-6 py-4 space-y-3">
+            <%= link_to "#", class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
+              📧 Send bulk invitations
+            <% end %>
+            <%= link_to "#", class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
+              📊 Export assessment results
+            <% end %>
+            <%= link_to edit_admin_company_path(@company), class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
+              ⚙️ Edit company settings
+            <% end %>
+            <%= link_to admin_company_path(@company), method: :delete,
+                  confirm: "Are you sure you want to delete #{@company.name}? This will also remove all stakeholders and assessments.",
+                  class: "block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded transition-colors" do %>
+              🗑️ Delete company
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

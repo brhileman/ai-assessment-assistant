@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   # Admin routes
   namespace :admin do
     root 'dashboard#index'
+    resources :companies do
+      resources :stakeholders, only: [:new, :create, :destroy]
+    end
   end
   
   # Welcome page routes

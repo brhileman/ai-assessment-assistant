@@ -14,6 +14,11 @@ class Company < ApplicationRecord
     (completed.to_f / stakeholders.count * 100).round(1)
   end
   
+  # Alias for shorter method name used in views/controllers
+  def completion_rate
+    assessment_completion_rate
+  end
+  
   def pending_assessments_count
     stakeholders.left_joins(:assessment).where(assessments: { id: nil }).count
   end

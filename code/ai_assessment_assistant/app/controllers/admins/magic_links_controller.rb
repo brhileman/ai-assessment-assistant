@@ -30,8 +30,9 @@ class Admins::MagicLinksController < ApplicationController
       return
     end
     
-    # Find admin by magic link token
-    admin = Admin.find_by(magic_link_token: Devise.token_generator.digest(Admin, :magic_link_token, token))
+    # Find admin by magic link token - we need to encrypt the raw token to match what's stored
+    encrypted_token = Devise.token_generator.digest(Admin, :magic_link_token, token)
+    admin = Admin.find_by(magic_link_token: encrypted_token)
     
     if admin.nil?
       redirect_to new_admin_magic_link_path, alert: 'Invalid magic link. Please request a new one.'

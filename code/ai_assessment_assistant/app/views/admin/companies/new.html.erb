@@ -1,0 +1,59 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-8" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4">
+        <li>
+          <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
+            Dashboard
+          <% end %>
+        </li>
+        <li>
+          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </li>
+        <li>
+          <%= link_to admin_companies_path, class: "text-gray-400 hover:text-gray-500" do %>
+            Companies
+          <% end %>
+        </li>
+        <li>
+          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+        </li>
+        <li class="text-gray-500">New Company</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">Add New Company</h1>
+      <p class="mt-2 text-gray-600">
+        Create a new company to manage stakeholder assessments and customize AI agent instructions
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white shadow rounded-lg">
+      <div class="px-6 py-8">
+        <%= render 'form', company: @company %>
+      </div>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <h3 class="text-lg font-medium text-blue-800 mb-3">Getting Started with Your New Company</h3>
+      <div class="text-blue-700 space-y-2">
+        <p><strong>After creating your company:</strong></p>
+        <ol class="list-decimal list-inside space-y-1 ml-4">
+          <li>You'll be able to add stakeholders who will receive assessment invitations</li>
+          <li>Each stakeholder will get a unique link to participate in voice assessments</li>
+          <li>The AI agent will use your custom instructions to guide conversations</li>
+          <li>You can track progress and view results from the company dashboard</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>

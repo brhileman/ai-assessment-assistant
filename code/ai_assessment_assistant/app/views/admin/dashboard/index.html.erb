@@ -1,4 +1,4 @@
-<%# Admin Dashboard %>
+<%# Enhanced Admin Dashboard %>
 <div class="min-h-screen bg-gray-50">
   <!-- Admin Navigation -->
   <nav class="bg-white shadow-sm border-b border-gray-200">
@@ -20,7 +20,7 @@
             Welcome, <%= @admin.email %>
           </span>
           <%= link_to "Logout", destroy_admin_session_path, method: :delete,
-              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700" %>
+              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors" %>
         </div>
       </div>
     </div>
@@ -29,79 +29,237 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
-      <!-- Welcome Card -->
-      <div class="bg-white overflow-hidden shadow rounded-lg mb-6">
-        <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">
-            Welcome to the Admin Dashboard
-          </h3>
-          <p class="text-sm text-gray-600 mb-4">
-            Manage AI assessments, companies, and stakeholders from this central hub.
-          </p>
-          
-          <!-- Quick Stats -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-14 0h2m-2 0h-2m2 0h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                  </svg>
-                </div>
-                <div class="ml-3">
-                  <p class="text-sm font-medium text-blue-600">Companies</p>
-                  <p class="text-lg font-semibold text-blue-900">0</p>
-                </div>
+      <!-- Dashboard Header -->
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl">
+          Dashboard Overview
+        </h2>
+        <p class="mt-1 text-sm text-gray-600">
+          Monitor assessment progress and manage your AI assessment system
+        </p>
+      </div>
+
+      <!-- Overview Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Companies Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-2m-14 0h2m-2 0h-2m2 0h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Companies</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:companies][:total] %></dd>
+                </dl>
               </div>
             </div>
-            
-            <div class="bg-green-50 p-4 rounded-lg">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                  </svg>
-                </div>
-                <div class="ml-3">
-                  <p class="text-sm font-medium text-green-600">Stakeholders</p>
-                  <p class="text-lg font-semibold text-green-900">0</p>
-                </div>
+            <div class="mt-4">
+              <div class="flex items-center text-sm text-gray-600">
+                <span><%= @stats[:companies][:with_assessments] %> with active assessments</span>
               </div>
             </div>
-            
-            <div class="bg-purple-50 p-4 rounded-lg">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                  </svg>
-                </div>
-                <div class="ml-3">
-                  <p class="text-sm font-medium text-purple-600">Assessments</p>
-                  <p class="text-lg font-semibold text-purple-900">0</p>
-                </div>
+          </div>
+        </div>
+
+        <!-- Stakeholders Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Stakeholders</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:stakeholders][:total] %></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center text-sm text-gray-600 space-x-4">
+                <span class="text-blue-600"><%= @stats[:stakeholders][:invited] %> invited</span>
+                <span class="text-orange-600"><%= @stats[:stakeholders][:in_progress] %> started</span>
+                <span class="text-green-600"><%= @stats[:stakeholders][:completed] %> completed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assessments Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Total Assessments</dt>
+                  <dd class="text-lg font-medium text-gray-900"><%= @stats[:assessments][:total] %></dd>
+                </dl>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center text-sm text-gray-600">
+                <span><%= @stats[:assessments][:completion_rate] %>% completion rate</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Card -->
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+          <div class="p-5">
+            <div class="flex items-center">
+              <div class="flex-shrink-0">
+                <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+              <div class="ml-5 w-0 flex-1">
+                <dl>
+                  <dt class="text-sm font-medium text-gray-500 truncate">Avg Duration</dt>
+                  <dd class="text-lg font-medium text-gray-900">
+                    <%= @average_duration > 0 ? "#{@average_duration} min" : "N/A" %>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="flex items-center text-sm text-gray-600">
+                <span><%= @completed_assessments %> completed assessments</span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <!-- Coming Soon -->
-      <div class="bg-white overflow-hidden shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-lg leading-6 font-medium text-gray-900 mb-2">
-            Coming Soon
-          </h3>
-          <p class="text-sm text-gray-600 mb-4">
-            Additional admin features will be available in upcoming tasks:
-          </p>
-          
-          <ul class="text-sm text-gray-600 space-y-2">
-            <li>• Company and stakeholder management</li>
-            <li>• Assessment creation and monitoring</li>
-            <li>• Voice assessment interface</li>
-            <li>• Results dashboard and analytics</li>
-          </ul>
+
+      <!-- Main Dashboard Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Recent Activity -->
+        <div class="lg:col-span-2">
+          <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Recent Assessment Activity
+              </h3>
+              
+              <% if @recent_assessments.any? %>
+                <div class="space-y-4">
+                  <% @recent_assessments.each do |assessment| %>
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                      <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                          </svg>
+                        </div>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-gray-900">
+                          <%= assessment.stakeholder.name %> completed assessment
+                        </p>
+                        <p class="text-sm text-gray-500">
+                          <%= assessment.stakeholder.company.name %> • 
+                          <%= assessment.duration_formatted %> • 
+                          <%= time_ago_in_words(assessment.completed_at) %> ago
+                        </p>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <div class="text-center py-6">
+                  <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                  <h3 class="mt-2 text-sm font-medium text-gray-900">No recent activity</h3>
+                  <p class="mt-1 text-sm text-gray-500">Get started by creating companies and inviting stakeholders.</p>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions & Top Companies -->
+        <div class="space-y-6">
+          <!-- Quick Actions -->
+          <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Quick Actions
+              </h3>
+              <div class="space-y-3">
+                <%= link_to "Add New Company", new_admin_company_path, 
+                    class: "w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors text-center block" %>
+                <%= link_to "View All Companies", admin_companies_path, 
+                    class: "w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors text-center block" %>
+                <%= link_to "System Settings", "#", 
+                    class: "w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors text-center block" %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Performing Companies -->
+          <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                Top Performing Companies
+              </h3>
+              
+              <% if @top_performing_companies.any? %>
+                <div class="space-y-3">
+                  <% @top_performing_companies.each_with_index do |company, index| %>
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center space-x-3">
+                        <div class="flex-shrink-0">
+                          <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                            <span class="text-xs font-medium text-blue-600"><%= index + 1 %></span>
+                          </div>
+                        </div>
+                        <div>
+                          <p class="text-sm font-medium text-gray-900"><%= company.name %></p>
+                        </div>
+                      </div>
+                      <div class="text-sm text-gray-500">
+                        <%= company.completed_count %> completed
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              <% else %>
+                <p class="text-sm text-gray-500">No assessments completed yet.</p>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Assessment Activity Chart -->
+          <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">
+                7-Day Activity
+              </h3>
+              <div class="space-y-2">
+                <% @daily_activity.each do |day| %>
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="text-gray-600"><%= day[:date].strftime("%a %m/%d") %></span>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-green-600"><%= day[:completed] %> completed</span>
+                      <span class="text-orange-600"><%= day[:started] %> started</span>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
