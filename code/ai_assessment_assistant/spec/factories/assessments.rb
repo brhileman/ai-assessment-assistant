@@ -3,8 +3,16 @@ FactoryBot.define do
     stakeholder { association :stakeholder }
     full_transcript { Faker::Lorem.paragraph(sentence_count: 50) }
     completed_at { nil }
+    started_at { nil }
+    
+    trait :started do
+      started_at { 1.hour.ago }
+      completed_at { nil }
+      full_transcript { nil }
+    end
     
     trait :completed do
+      started_at { 2.hours.ago }
       completed_at { Faker::Time.between(from: 30.minutes.ago, to: Time.current) }
       full_transcript { 
         [
@@ -19,6 +27,7 @@ FactoryBot.define do
     end
     
     trait :in_progress do
+      started_at { 30.minutes.ago }
       completed_at { nil }
       full_transcript { nil }
     end

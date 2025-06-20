@@ -1,0 +1,88 @@
+<div class="min-h-screen gradient-bg flex items-center justify-center p-4">
+  <div class="glass-card w-full max-w-md">
+    <!-- Header with Logo -->
+    <div class="text-center mb-8">
+      <%= image_tag "White-Horizontal-LPL-Logo.svg", 
+          alt: "LaunchPad Lab", 
+          class: "h-12 mx-auto mb-6" %>
+      <h1 class="text-2xl font-bold text-white mb-2">AI Assessment</h1>
+      <p class="text-slate-300"><%= @company.name %></p>
+    </div>
+    
+    <!-- Personalized Greeting -->
+    <div class="mb-8">
+      <h2 class="text-xl text-white mb-4">Hello, <%= @stakeholder.name %></h2>
+      <p class="text-slate-200 leading-relaxed">
+        You've been invited to participate in an AI readiness assessment. 
+        This conversation will help us understand your role, current technology 
+        usage, and perspectives on AI adoption.
+      </p>
+    </div>
+    
+    <!-- Assessment Information -->
+    <div class="mb-8 space-y-4">
+      <div class="bg-slate-800/30 rounded-lg p-4">
+        <h3 class="text-white font-medium mb-2">What to expect:</h3>
+        <ul class="text-slate-300 text-sm space-y-1">
+          <li>• 15-30 minute voice conversation</li>
+          <li>• Questions about your role and technology use</li>
+          <li>• AI readiness and adoption perspectives</li>
+          <li>• Real-time transcript provided</li>
+        </ul>
+      </div>
+      
+      <% if @company.custom_instructions.present? %>
+        <div class="bg-slate-800/30 rounded-lg p-4">
+          <h3 class="text-white font-medium mb-2">From <%= @company.name %>:</h3>
+          <p class="text-slate-300 text-sm">
+            <%= simple_format(@company.custom_instructions) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Technical Requirements -->
+    <div class="mb-8">
+      <details class="bg-slate-800/30 rounded-lg">
+        <summary class="p-4 text-white font-medium cursor-pointer hover:bg-slate-700/30 rounded-lg transition-colors">
+          Technical Requirements
+        </summary>
+        <div class="px-4 pb-4 text-slate-300 text-sm">
+          <ul class="space-y-1">
+            <li>• Microphone access required</li>
+            <li>• Modern browser (Chrome, Firefox, Safari, Edge)</li>
+            <li>• Stable internet connection</li>
+            <li>• Quiet environment preferred</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+    
+    <!-- Start Assessment Button -->
+    <div class="text-center">
+      <% unless @assessment_started %>
+        <%= button_to start_assessment_path(@stakeholder.invitation_token), 
+            method: :post,
+            class: "w-full bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white py-3 px-6 rounded-lg font-medium hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5",
+            data: { confirm: "Ready to start your assessment?" } do %>
+          Start Assessment
+        <% end %>
+      <% else %>
+        <%= link_to voice_assessment_path(@stakeholder.invitation_token),
+            class: "w-full bg-gradient-to-r from-lpl-blue to-lpl-cyan text-white py-3 px-6 rounded-lg font-medium hover:shadow-glow transition-all duration-300 transform hover:-translate-y-0.5 inline-block text-center" do %>
+          Continue Assessment
+        <% end %>
+      <% end %>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="mt-8 text-center">
+      <p class="text-slate-400 text-sm">
+        Questions? Contact us at 
+        <a href="mailto:assessment@launchpadlab.com" class="text-lpl-cyan hover:underline">
+          assessment@launchpadlab.com
+        </a>
+      </p>
+    </div>
+  </div>
+</div>

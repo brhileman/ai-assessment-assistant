@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # Stakeholder assessment routes (token-based)
+  get '/assessment/:token', to: 'assessment#show', as: :assessment
+  post '/assessment/:token/start', to: 'assessment#start', as: :start_assessment
+  get '/voice/:token', to: 'voice_assessment#show', as: :voice_assessment
   # Admin authentication with magic links  
   devise_for :admins, controllers: {
     magic_links: 'admins/magic_links'
@@ -17,6 +21,9 @@ Rails.application.routes.draw do
   # Admin routes
   namespace :admin do
     root 'dashboard#index'
+    resources :companies do
+      resources :stakeholders, only: [:new, :create, :destroy], param: :token
+    end
   end
   
   # Welcome page routes
