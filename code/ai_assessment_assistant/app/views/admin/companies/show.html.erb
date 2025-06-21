@@ -113,9 +113,9 @@
                             • <%= stakeholder.assessment.duration_minutes %> minutes
                           <% end %>
                         </div>
-                      <% elsif stakeholder.invitation_sent_at %>
+                      <% else %>
                         <div class="mt-2 text-xs text-gray-500">
-                          Invited <%= time_ago_in_words(stakeholder.invitation_sent_at) %> ago
+                          Invited <%= time_ago_in_words(stakeholder.created_at) %> ago
                         </div>
                       <% end %>
                     </div>

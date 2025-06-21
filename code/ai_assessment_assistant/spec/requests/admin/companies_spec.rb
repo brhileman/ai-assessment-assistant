@@ -52,6 +52,27 @@ RSpec.describe "Admin::Companies", type: :request do
       get admin_company_path(company)
       expect(response.body).to include(company.name)
     end
+
+    context "with stakeholders" do
+      let!(:stakeholder) { create(:stakeholder, company: company, name: "John Doe", email: "john@example.com") }
+      let!(:completed_stakeholder) { create(:stakeholder, :assessment_completed, company: company, name: "Jane Smith") }
+
+      it "displays stakeholder information without errors" do
+        get admin_company_path(company)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include("John Doe")
+        expect(response.body).to include("Jane Smith")
+        expect(response.body).to include("Invited")
+        expect(response.body).to include("Completed")
+      end
+
+      it "shows completion rate and stats" do
+        get admin_company_path(company)
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include("Total Stakeholders")
+        expect(response.body).to include("Completion Rate")
+      end
+    end
   end
 
   describe "GET /admin/companies/new" do
