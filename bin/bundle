@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Bundle wrapper script for AI Assessment Assistant
+# This automatically delegates bundle commands to the nested Rails app directory
+
+RAILS_APP_DIR="code/ai_assessment_assistant"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+RAILS_PATH="$PROJECT_ROOT/$RAILS_APP_DIR"
+
+# Check if the Rails app directory exists
+if [ ! -d "$RAILS_PATH" ]; then
+    echo "❌ Error: Rails app not found at $RAILS_PATH"
+    echo "💡 Expected structure: project_root/code/ai_assessment_assistant/"
+    exit 1
+fi
+
+# Print helpful info
+echo "💎 Bundle Wrapper: Delegating to $RAILS_APP_DIR"
+echo "📂 Running: cd $RAILS_PATH && bundle $*"
+echo ""
+
+# Change to Rails directory and run the bundle command
+cd "$RAILS_PATH"
+exec bundle "$@" 

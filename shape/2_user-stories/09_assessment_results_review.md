@@ -11,9 +11,10 @@ Administrators need easy access to conversation transcripts to understand client
 
 ### Happy Path
 1. Admin views company dashboard showing completed assessments
-2. Admin clicks on a specific stakeholder's completed assessment
+2. Admin clicks on a specific stakeholder's completed assessment from either:
+   - Company detail page "View" links
+   - Main dashboard "Recent Assessment Activity" feed 
 3. Admin views the complete conversation transcript
-4. Admin can export transcript for further analysis
 
 ### Edge Cases
 - Very long transcripts: Implement scrolling for basic viewing
@@ -21,18 +22,20 @@ Administrators need easy access to conversation transcripts to understand client
 - Missing assessment: Show message if stakeholder hasn't completed assessment yet
 
 ## Acceptance Criteria
-- [ ] List view of all completed assessments per company
-- [ ] Full transcript display with timestamps
-- [ ] Export transcript to PDF/text format
-- [ ] Assessment metadata (duration, completion date, stakeholder info)
+- [x] List view of all completed assessments per company
+- [x] Clickable assessment links in main dashboard Recent Activity feed
+- [x] Full transcript display with timestamps
+- [x] Assessment metadata (duration, completion date, stakeholder info)
+- [x] Consistent access from multiple entry points (company view + dashboard)
 
 ## Key Screens
+- Main admin dashboard with clickable Recent Activity feed
 - Company assessment results dashboard
 - Individual transcript viewer
-- Export tools
 
 ## MVP Decisions
 - **Search functionality**: Not implemented for MVP - basic scrolling sufficient
 - **Admin notes/comments**: Not needed for MVP
-- **Advanced analytics**: Not needed for MVP - simple export for external analysis
+- **Export functionality**: Not needed for MVP - admins can copy/paste if needed
+- **Advanced analytics**: Not needed for MVP
 - **AI-powered summarization**: Not needed for MVP

@@ -88,6 +88,15 @@
                         <div class="flex-1">
                           <h3 class="text-sm font-medium text-gray-900"><%= stakeholder.name %></h3>
                           <p class="text-sm text-gray-500"><%= stakeholder.email %></p>
+                          <div class="mt-1">
+                            <p class="text-xs text-blue-600 font-mono">
+                              <%= link_to assessment_url(stakeholder.invitation_token), 
+                                    assessment_url(stakeholder.invitation_token), 
+                                    target: "_blank", 
+                                    class: "hover:text-blue-800 hover:underline",
+                                    title: "Click to open assessment link in new tab" %>
+                            </p>
+                          </div>
                         </div>
                         <div class="ml-4">
                           <% if stakeholder.assessment&.completed_at %>
@@ -130,11 +139,16 @@
                           Resend
                         <% end %>
                       <% end %>
-                      <% if stakeholder.assessment %>
-                        <%= link_to "#", class: "text-xs text-green-600 hover:text-green-800",
-                              title: "View assessment results (coming in Task 8)" do %>
-                          View
+                      <% if stakeholder.assessment&.completed? %>
+                        <%= link_to admin_company_assessment_path(@company, stakeholder.assessment), 
+                              class: "text-xs text-green-600 hover:text-green-800",
+                              title: "View assessment results and transcript" do %>
+                          View Results
                         <% end %>
+                      <% elsif stakeholder.assessment %>
+                        <span class="text-xs text-gray-400" title="Assessment in progress">
+                          In Progress
+                        </span>
                       <% end %>
                       <%= link_to admin_company_stakeholder_path(@company, stakeholder), 
                             method: :delete,

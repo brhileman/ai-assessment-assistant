@@ -22,60 +22,117 @@ document.addEventListener('turbo:load', function() {
 function initFlashMessageDismissal() {
   console.log('🔍 initFlashMessageDismissal function called');
   
-  // VERY SIMPLE: Just find ANY div with "successfully" text and green background
-  const allDivs = document.querySelectorAll('div');
-  console.log(`🔍 Found ${allDivs.length} total div elements on page`);
+  // Target flash messages by their specific IDs and common class
+  const flashSelectors = [
+    '#flash-notice',
+    '#flash-alert', 
+    '.flash-message'
+  ];
   
   let foundFlash = false;
   
-  allDivs.forEach((div, index) => {
-    const text = div.textContent.toLowerCase();
-    const classes = div.className;
+  flashSelectors.forEach(selector => {
+    const flashMessages = document.querySelectorAll(selector);
     
-    // Look for any div that contains "successfully" and has green background
-    if (text.includes('successfully') && classes.includes('bg-green')) {
-      console.log(`✅ FOUND FLASH MESSAGE #${index}!`);
-      console.log(`📝 Text: "${text.trim()}"`);
-      console.log(`🎨 Classes: "${classes}"`);
-      foundFlash = true;
+    flashMessages.forEach((flashDiv) => {
+      // Skip if we already processed this element
+      if (flashDiv.dataset.flashProcessed) return;
       
-      // Add very obvious red border to confirm we found it
-      div.style.border = '5px solid red';
-      div.style.position = 'relative';
+      console.log(`✅ FOUND FLASH MESSAGE: ${selector}`);
+      console.log(`📝 Text: "${flashDiv.textContent.trim()}"`);
+      console.log(`🎨 ID: "${flashDiv.id}", Classes: "${flashDiv.className}"`);
+      
+      foundFlash = true;
+      flashDiv.dataset.flashProcessed = 'true';
+      
+      // Make sure the container is positioned relatively for absolute positioning
+      if (!flashDiv.style.position && !flashDiv.className.includes('fixed')) {
+        flashDiv.style.position = 'relative';
+      }
       
       // Add close button
-      const closeBtn = document.createElement('div');
-      closeBtn.innerHTML = '❌ CLOSE';
-      closeBtn.style.position = 'absolute';
-      closeBtn.style.top = '10px';
-      closeBtn.style.right = '10px';
-      closeBtn.style.background = 'red';
-      closeBtn.style.color = 'white';
-      closeBtn.style.padding = '5px 10px';
-      closeBtn.style.cursor = 'pointer';
-      closeBtn.style.zIndex = '9999';
+      const closeBtn = document.createElement('button');
+      closeBtn.innerHTML = '×';
+      closeBtn.className = 'flash-close-btn';
+      closeBtn.setAttribute('aria-label', 'Close notification');
+      closeBtn.style.cssText = `
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.1);
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        color: currentColor;
+        transition: background-color 0.2s ease;
+        z-index: 10;
+      `;
       
-      closeBtn.onclick = function() {
+      // Hover effect
+      closeBtn.addEventListener('mouseenter', function() {
+        this.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+      });
+      
+      closeBtn.addEventListener('mouseleave', function() {
+        this.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+      });
+      
+      // Close functionality
+      closeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
         console.log('🗑️ Close button clicked!');
-        div.remove();
-      };
+        
+        // Mark as manually dismissed
+        flashDiv.dataset.manuallyDismissed = 'true';
+        
+        // Fade out animation
+        flashDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        flashDiv.style.opacity = '0';
+        flashDiv.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+          if (flashDiv.parentNode) {
+            flashDiv.remove();
+          }
+        }, 300);
+      });
       
-      div.appendChild(closeBtn);
+      flashDiv.appendChild(closeBtn);
       console.log('➕ Close button added to flash message');
       
       // Auto close after 5 seconds
       setTimeout(() => {
-        console.log('⏰ 5 seconds passed - auto-removing flash message');
-        if (div.parentNode) {
-          div.remove();
+        console.log('⏰ 5 seconds passed - checking if should auto-remove flash message');
+        if (flashDiv.parentNode && !flashDiv.dataset.manuallyDismissed) {
+          console.log('🚮 Auto-removing flash message');
+          // Fade out animation
+          flashDiv.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+          flashDiv.style.opacity = '0';
+          flashDiv.style.transform = 'translateY(-10px)';
+          
+          setTimeout(() => {
+            if (flashDiv.parentNode) {
+              flashDiv.remove();
+            }
+          }, 500);
+        } else if (flashDiv.dataset.manuallyDismissed) {
+          console.log('⏸️ Flash message was manually dismissed, skipping auto-remove');
         }
       }, 5000);
-    }
+    });
   });
   
   if (!foundFlash) {
     console.log('❌ NO FLASH MESSAGES FOUND');
-    console.log('📊 Searched through all divs for text containing "successfully" and classes containing "bg-green"');
+    console.log('📊 Searched using selectors:', flashSelectors);
   }
 }
 

@@ -7,6 +7,7 @@ Create the admin dashboard and company management interface with full CRUD opera
 
 ## Reference Documentation
 - **User Story 2**: Company Management in `../2_user-stories/`
+- **User Story 9**: Assessment Results Review in `../2_user-stories/09_assessment_results_review.md`
 - **Design System**: Light theme for admin pages in `../3_design-system/`
 - **Data Models**: Company, Stakeholder, Assessment models from Task 3
 
@@ -86,14 +87,38 @@ Create the admin dashboard and company management interface with full CRUD opera
   - [~] 8.6 Test search and filters work correctly *(Not needed for MVP - simple list sufficient)*
   - [~] 8.7 Add URL parameters for shareable filtered views *(Not needed for MVP - simple list sufficient)*
 
-- [ ] 9.0 Testing and Validation
-  - [ ] 9.1 Write controller tests for all admin actions
-  - [ ] 9.2 Create system tests for complete workflows
-  - [ ] 9.3 Test admin authentication on all pages
-  - [ ] 9.4 Verify responsive design on mobile devices
-  - [~] 9.5 Test search and filtering functionality *(DEFERRED for MVP - simple list sufficient)*
-  - [ ] 9.6 Validate proper error handling
-  - [ ] 9.7 Test accessibility compliance
+- [x] 8.0 Assessment Results Review (Individual Transcript Viewing)
+  - [x] 8.1 Generate Admin::AssessmentsController: `rails generate controller Admin::Assessments show`
+  - [x] 8.2 Add assessment results routes under companies namespace
+  - [x] 8.3 Create assessment show page with full transcript display
+  - [x] 8.4 Add transcript formatting with timestamps (if available)
+  - [x] 8.5 Display assessment metadata (duration, completion date, stakeholder info)
+  - [x] 8.6 Add navigation back to company dashboard
+  - [x] 8.7 Update "View" links in company dashboard to work properly
+  - [x] 8.8 Update main dashboard Recent Activity feed with clickable assessment links
+  - [x] 8.9 Ensure consistent linking from both dashboard and company views
+  - [x] 8.10 Handle edge cases (incomplete assessments, missing transcripts)
+  - [x] 8.11 Style assessment results page using design system
+  - [x] 8.12 Test assessment viewing works from all entry points (dashboard + company view)
+
+- [~] 9.0 Add Search and Filtering *(DEFERRED for MVP)*
+  - [~] 9.1 Implement company name search *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.2 Add filter by completion status *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.3 Add filter by assessment activity (recent, stale) *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.4 Create filter UI components *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.5 Add clear filters functionality *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.6 Test search and filters work correctly *(Not needed for MVP - simple list sufficient)*
+  - [~] 9.7 Add URL parameters for shareable filtered views *(Not needed for MVP - simple list sufficient)*
+
+- [ ] 10.0 Testing and Validation
+  - [ ] 10.1 Write controller tests for all admin actions
+  - [ ] 10.2 Create system tests for complete workflows
+  - [ ] 10.3 Test admin authentication on all pages
+  - [ ] 10.4 Verify responsive design on mobile devices
+  - [~] 10.5 Test search and filtering functionality *(DEFERRED for MVP - simple list sufficient)*
+  - [ ] 10.6 Validate proper error handling
+  - [ ] 10.7 Test accessibility compliance
+  - [ ] 10.8 Test assessment results viewing workflow
 
 ## File Tracking
 
@@ -110,18 +135,25 @@ Create the admin dashboard and company management interface with full CRUD opera
 | `app/views/admin/companies/_form.html.erb` | Company form partial | 5.1 | ✅ |
 | `app/controllers/admin/stakeholders_controller.rb` | Stakeholder CRUD controller | 6.0 | ✅ |
 | `app/views/admin/stakeholders/new.html.erb` | New stakeholder form | 6.2 | ✅ |
+| `app/controllers/admin/assessments_controller.rb` | Assessment results controller | 8.1 | ✅ |
+| `app/views/admin/assessments/show.html.erb` | Individual assessment transcript view | 8.3 | ✅ |
 | `app/views/admin/shared/_navigation.html.erb` | Admin navigation | 7.1 | ⏳ |
 | `app/views/admin/shared/_stakeholder.html.erb` | Stakeholder list item | 6.1 | ✅ |
-| `spec/controllers/admin/dashboard_controller_spec.rb` | Dashboard tests | 9.1 | ⏳ |
-| `spec/controllers/admin/companies_controller_spec.rb` | Company controller tests | 9.1 | ⏳ |
+| `spec/controllers/admin/dashboard_controller_spec.rb` | Dashboard tests | 10.1 | ⏳ |
+| `spec/controllers/admin/companies_controller_spec.rb` | Company controller tests | 10.1 | ⏳ |
+| `spec/controllers/admin/assessments_controller_spec.rb` | Assessment results controller tests | 10.1 | ⏳ |
 | `spec/requests/admin/stakeholders_spec.rb` | Stakeholder controller tests | 6.0 | ✅ |
-| `spec/system/admin/company_management_spec.rb` | Company workflow tests | 9.2 | ⏳ |
+| `spec/system/admin/company_management_spec.rb` | Company workflow tests | 10.2 | ⏳ |
+| `spec/system/admin/assessment_results_spec.rb` | Assessment viewing workflow tests | 10.8 | ⏳ |
 
 ### Files to Modify
 | File Path | Changes | Task Ref | Status |
 |-----------|---------|----------|--------|
 | `config/routes.rb` | Add admin namespace routes | 2.2 | ✅ |
+| `config/routes.rb` | Add assessment results routes | 8.2 | ✅ |
 | `app/views/layouts/admin.html.erb` | Update admin layout | 7.1 | ⏳ |
+| `app/views/admin/companies/show.html.erb` | Update "View" links to work properly | 8.7 | ✅ |
+| `app/views/admin/dashboard/index.html.erb` | Add clickable links to Recent Activity feed | 8.8 | ✅ |
 
 ## Dashboard Overview Mockup
 
@@ -163,6 +195,10 @@ Create the admin dashboard and company management interface with full CRUD opera
 - [ ] Admin dashboard provides clear overview of system status
 - [ ] Company CRUD operations work flawlessly
 - [ ] Stakeholder management integrates seamlessly
+- [ ] Assessment results viewing displays full transcripts with metadata
+- [ ] Individual assessment pages accessible from multiple entry points:
+  - [ ] Company dashboard "View" links
+  - [ ] Main dashboard Recent Activity feed links
 - [~] Search and filtering improve usability *(DEFERRED for MVP - simple list sufficient)*
 - [ ] Responsive design works on all devices
 - [ ] Authentication protects all admin routes

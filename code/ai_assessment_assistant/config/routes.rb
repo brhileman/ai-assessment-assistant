@@ -43,7 +43,13 @@ Rails.application.routes.draw do
           post :resend_invitation
         end
       end
+      
+      # Assessment results routes nested under companies
+      resources :assessments, only: [:show], path: 'assessments'
     end
+    
+    # Direct assessment access routes (for dashboard links)
+    resources :assessments, only: [:show]
   end
   
   # Welcome page routes

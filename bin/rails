@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Rails wrapper script for AI Assessment Assistant
+# This automatically delegates to the nested Rails app in code/ai_assessment_assistant/
+
+RAILS_APP_DIR="code/ai_assessment_assistant"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+RAILS_PATH="$PROJECT_ROOT/$RAILS_APP_DIR"
+
+# Check if the Rails app directory exists
+if [ ! -d "$RAILS_PATH" ]; then
+    echo "❌ Error: Rails app not found at $RAILS_PATH"
+    echo "💡 Expected structure: project_root/code/ai_assessment_assistant/"
+    exit 1
+fi
+
+# Check if the actual Rails script exists
+if [ ! -f "$RAILS_PATH/bin/rails" ]; then
+    echo "❌ Error: bin/rails not found at $RAILS_PATH/bin/rails"
+    echo "💡 Make sure you're in a Rails project directory"
+    exit 1
+fi
+
+# Print helpful info
+echo "🚀 Rails Wrapper: Delegating to $RAILS_APP_DIR"
+echo "📂 Running: cd $RAILS_PATH && bin/rails $*"
+echo ""
+
+# Change to Rails directory and run the command
+cd "$RAILS_PATH"
+exec bin/rails "$@" 

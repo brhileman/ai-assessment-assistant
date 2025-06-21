@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Development server wrapper script for AI Assessment Assistant
+# This automatically starts the Rails server from the correct nested directory
+
+RAILS_APP_DIR="code/ai_assessment_assistant"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+RAILS_PATH="$PROJECT_ROOT/$RAILS_APP_DIR"
+
+# Check if the Rails app directory exists
+if [ ! -d "$RAILS_PATH" ]; then
+    echo "❌ Error: Rails app not found at $RAILS_PATH"
+    echo "💡 Expected structure: project_root/code/ai_assessment_assistant/"
+    exit 1
+fi
+
+# Print helpful info
+echo "🚀 Development Server Wrapper"
+echo "📂 Starting Rails server from: $RAILS_APP_DIR"
+echo "🌐 Server will be available at: http://localhost:3000"
+echo ""
+
+# Change to Rails directory and start the development server
+cd "$RAILS_PATH"
+
+# Check if Procfile.dev exists, otherwise use rails server
+if [ -f "Procfile.dev" ]; then
+    echo "📋 Found Procfile.dev - using development processes"
+    exec bin/dev
+else
+    echo "🎯 Starting Rails server directly"
+    exec bin/rails server "$@"
+fi 
