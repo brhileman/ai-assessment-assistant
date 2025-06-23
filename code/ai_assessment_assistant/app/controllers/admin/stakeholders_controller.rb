@@ -7,7 +7,7 @@ class Admin::StakeholdersController < ApplicationController
   def index
     @stakeholders = Stakeholder.includes(:company, :assessment).order(created_at: :desc)
     @total_stakeholders = @stakeholders.count
-    @completed_assessments = @stakeholders.joins(:assessment).where(assessments: { completed_at: nil.not }).count
+    @completed_assessments = @stakeholders.joins(:assessment).where.not(assessments: { completed_at: nil }).count
     @pending_assessments = @total_stakeholders - @completed_assessments
   end
 
