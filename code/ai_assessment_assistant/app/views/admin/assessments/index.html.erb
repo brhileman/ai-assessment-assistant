@@ -28,6 +28,23 @@
   <!-- Main Content -->
   <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
     <div class="px-4 py-6 sm:px-0">
+      <!-- Breadcrumb Navigation -->
+      <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-4">
+          <li>
+            <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
+              Dashboard
+            <% end %>
+          </li>
+          <li>
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </li>
+          <li class="text-gray-500">All Assessments</li>
+        </ol>
+      </nav>
+
             <!-- Header Section -->
       <div class="mb-8">
         <div class="flex justify-between items-center">
