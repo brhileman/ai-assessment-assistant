@@ -176,21 +176,24 @@ class OpenaiRealtimeService
   end
   
   def conversation_instructions
+    # Get company-specific instructions for the {AI Agent Instructions} placeholder
+    company_context = if @company.custom_instructions.present?
+      @company.custom_instructions
+    else
+      "This is a general AI readiness assessment for #{@company.name}. Focus on understanding their current technology usage, operational challenges, and potential AI opportunities."
+    end
+    
     base_instructions = <<~INSTRUCTIONS
       You are an AI assistant at LaunchPad Lab, tasked with having a friendly, conversational interview (about 10 minutes long) with a business stakeholder. Your goal is to understand how their department currently works. Start by greeting the stakeholder (#{@stakeholder.name}) by their first name and briefly explaining that you are trained by LaunchPad Lab to help do some preliminary research to help support a larger AI Opportunity Assessment.
 
-      Here is context on this company and our current arrangement {AI Agent Instructions}
+      Here is context on this company and our current arrangement: #{company_context}
 
       Use open-ended questions to encourage them to explain in detail.  Begin by asking about the stakeholder's role and team objectives. Learn about their operational day to day largest challenges and pain points. Learn about how they currently use AI today and how they see it possibly being used in the future. Learn about their organization and any challenges we may encounter when implementing new technology or processes. 
 
       Keep your tone warm, curious, and engaging. Do not sound like a scripted questionnaire – instead, aim for a natural back-and-forth. Listen actively and adapt your next question based on the stakeholder's answers. For example, if they mention a specific tool or step, follow up on that. Maintain context throughout so you can ask relevant follow-up questions as the conversation evolves. Finally, thank the stakeholder for their time and ask if there's anything else they'd like to add, and finally instruct them to use the "Finish Assessment" button to conclude the conversation.
     INSTRUCTIONS
     
-    if @company.custom_instructions.present?
-      base_instructions + "\n\nCOMPANY-SPECIFIC DISCOVERY FOCUS:\n#{@company.custom_instructions}\n\nIncorporate this context naturally into your discovery questions and conversation flow."
-    else
-      base_instructions
-    end
+    base_instructions
   end
   
   def update_assessment_transcript(transcript_entry)
