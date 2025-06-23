@@ -1,4 +1,5 @@
 class Admins::MagicLinksController < ApplicationController
+  layout 'auth'
   before_action :set_admin, only: [:show]
   
   def new
