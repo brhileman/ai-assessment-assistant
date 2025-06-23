@@ -2,6 +2,7 @@ class Admin::AssessmentsController < ApplicationController
   before_action :authenticate_admin!
   before_action :set_assessment, only: [:show]
   before_action :set_company, only: [:show], if: -> { params[:company_id].present? }
+  layout 'admin'
   
   def index
     @assessments = Assessment.includes(:stakeholder => :company)
