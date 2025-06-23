@@ -71,7 +71,7 @@ Create the admin dashboard and company management interface with full CRUD opera
 
 - [ ] 7.0 Create Navigation and Layout
   - [ ] 7.1 Update admin layout with proper navigation
-  - [ ] 7.2 Add breadcrumb navigation for admin pages
+  - [x] 7.2 Add breadcrumb navigation for admin pages
   - [ ] 7.3 Include LaunchPad Lab branding in admin header
   - [ ] 7.4 Add admin user info and logout link
   - [ ] 7.5 Implement responsive sidebar for larger screens
