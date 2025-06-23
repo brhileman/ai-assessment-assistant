@@ -1,17 +1,47 @@
-<div class="min-h-screen bg-gray-50 py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header Section -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900">All Stakeholders</h1>
-          <p class="mt-2 text-gray-600">View all stakeholders across all companies</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Admin Navigation -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo and Title -->
+        <div class="flex items-center">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-8 mr-4" %>
+          <h1 class="text-xl font-semibold text-gray-900">
+            All Stakeholders
+          </h1>
         </div>
-        <%= link_to admin_root_path, class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
-          ← Back to Dashboard
-        <% end %>
+        
+        <!-- Admin Info and Logout -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-600">
+            Welcome, <%= current_admin.email %>
+          </span>
+          <%= link_to "Logout", destroy_admin_session_path, method: :delete,
+              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors" %>
+        </div>
       </div>
     </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+            <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl">
+              Stakeholder Overview
+            </h2>
+            <p class="mt-2 text-gray-600">View all stakeholders across all companies</p>
+          </div>
+          <%= link_to admin_root_path, class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
+            ← Back to Dashboard
+          <% end %>
+        </div>
+      </div>
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -108,5 +138,5 @@
         </div>
       <% end %>
     </div>
-  </div>
+  </main>
 </div> 
