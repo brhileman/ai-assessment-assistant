@@ -3,6 +3,14 @@ class Admin::AssessmentsController < ApplicationController
   before_action :set_assessment, only: [:show]
   before_action :set_company, only: [:show], if: -> { params[:company_id].present? }
   
+  def index
+    @assessments = Assessment.includes(:stakeholder => :company)
+                            .where.not(completed_at: nil)
+                            .order(completed_at: :desc)
+    @total_assessments = @assessments.count
+    @companies_with_assessments = @assessments.joins(:stakeholder => :company).distinct.count('companies.id')
+  end
+
   def show
     # Handle case where assessment doesn't exist
     unless @assessment

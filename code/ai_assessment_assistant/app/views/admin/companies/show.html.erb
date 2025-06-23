@@ -195,9 +195,18 @@
               <% if @company.custom_instructions.present? %>
                 <div>
                   <dt class="text-sm font-medium text-gray-500">AI Agent Instructions</dt>
-                  <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap"><%= truncate(@company.custom_instructions, length: 200) %></dd>
+                  <dd class="mt-1 text-sm text-gray-900 whitespace-pre-wrap">
+                    <div id="instructions-truncated" class="<%= 'hidden' if @company.custom_instructions.length <= 200 %>">
+                      <%= truncate(@company.custom_instructions, length: 200) %>
+                    </div>
+                    <div id="instructions-full" class="<%= 'hidden' if @company.custom_instructions.length > 200 %>">
+                      <%= @company.custom_instructions %>
+                    </div>
+                  </dd>
                   <% if @company.custom_instructions.length > 200 %>
-                    <button class="mt-1 text-sm text-blue-600 hover:text-blue-800">Show full instructions</button>
+                    <button id="toggle-instructions" class="mt-1 text-sm text-blue-600 hover:text-blue-800">
+                      <span id="toggle-text">Show full instructions</span>
+                    </button>
                   <% end %>
                 </div>
               <% else %>
@@ -253,7 +262,7 @@
             <%= link_to "#", class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
               📧 Send bulk invitations
             <% end %>
-            <%= link_to "#", class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
+            <%= link_to export_assessments_admin_company_path(@company, format: :csv), class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
               📊 Export assessment results
             <% end %>
             <%= link_to edit_admin_company_path(@company), class: "block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded transition-colors" do %>
@@ -270,3 +279,28 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const toggleButton = document.getElementById('toggle-instructions');
+  const toggleText = document.getElementById('toggle-text');
+  const truncatedDiv = document.getElementById('instructions-truncated');
+  const fullDiv = document.getElementById('instructions-full');
+  
+  if (toggleButton) {
+    toggleButton.addEventListener('click', function() {
+      if (fullDiv.classList.contains('hidden')) {
+        // Show full instructions
+        truncatedDiv.classList.add('hidden');
+        fullDiv.classList.remove('hidden');
+        toggleText.textContent = 'Show less';
+      } else {
+        // Show truncated instructions
+        fullDiv.classList.add('hidden');
+        truncatedDiv.classList.remove('hidden');
+        toggleText.textContent = 'Show full instructions';
+      }
+    });
+  }
+});
+</script>

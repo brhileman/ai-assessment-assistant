@@ -1,8 +1,15 @@
 class Admin::StakeholdersController < ApplicationController
   before_action :authenticate_admin!
-  before_action :find_company
+  before_action :find_company, except: [:index]
   before_action :find_stakeholder, only: [:destroy, :resend_invitation]
   layout 'admin'
+
+  def index
+    @stakeholders = Stakeholder.includes(:company, :assessment).order(created_at: :desc)
+    @total_stakeholders = @stakeholders.count
+    @completed_assessments = @stakeholders.joins(:assessment).where(assessments: { completed_at: nil.not }).count
+    @pending_assessments = @total_stakeholders - @completed_assessments
+  end
 
   def new
     @stakeholder = @company.stakeholders.build
