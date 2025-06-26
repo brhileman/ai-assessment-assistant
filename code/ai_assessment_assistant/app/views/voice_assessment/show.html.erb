@@ -424,16 +424,13 @@
               }
             });
             
-            // Trigger AI to start the conversation immediately
+            // Trigger AI to start the conversation with a simple response.create
             setTimeout(() => {
+              console.log('🚀 Triggering AI to start conversation...');
               this.sendOpenAIEvent({
-                type: 'response.create',
-                response: {
-                  modalities: ['text', 'audio'],
-                  instructions: `You are LaunchPad Lab's AI early discovery assistant conducting an AI readiness assessment. Begin with: "Hi ${this.conversationSession.stakeholder_name}! I'm LaunchPad Lab's trained AI discovery assistant." Then briefly explain this is a 3-5 minute conversation to understand ${this.conversationSession.company_name}'s current state of technology and AI interests. Ask about their main responsibilities at ${this.conversationSession.company_name} to start the discovery process.`
-                }
+                type: 'response.create'
               });
-            }, 1000); // Small delay to ensure session is fully configured
+            }, 1500); // Increased delay to ensure session is fully configured
           });
           
           // Create SDP offer
@@ -485,11 +482,19 @@
       },
 
       handleOpenAIEvent(event) {
-        console.log('📨 OpenAI event:', event.type);
+        console.log('📨 OpenAI event:', event.type, event);
         
         switch (event.type) {
           case 'session.created':
-            console.log('✅ Session created');
+            console.log('✅ Session created with ID:', event.session?.id);
+            break;
+            
+          case 'session.updated':
+            console.log('✅ Session updated');
+            break;
+            
+          case 'conversation.item.created':
+            console.log('💬 Conversation item created:', event.item?.role);
             break;
             
           case 'conversation.item.input_audio_transcription.completed':
@@ -497,6 +502,10 @@
             if (event.transcript) {
               this.addMessage('You', event.transcript, true);
             }
+            break;
+            
+          case 'response.created':
+            console.log('🎤 Response created - AI should start speaking');
             break;
             
           case 'response.audio_transcript.delta':
@@ -511,13 +520,22 @@
             }
             break;
             
+          case 'response.audio.delta':
+            // Raw audio data being received
+            console.log('🔊 Receiving audio data...');
+            break;
+            
+          case 'response.audio.done':
+            console.log('🔊 Audio playback complete');
+            break;
+            
           case 'response.done':
             console.log('🎯 AI response completed');
             break;
             
           case 'error':
-            console.error('OpenAI error:', event.error);
-            this.addMessage('System', `Error: ${event.error.message}`, false);
+            console.error('❌ OpenAI error:', event.error);
+            this.addMessage('System', `Error: ${event.error?.message || JSON.stringify(event.error)}`, false);
             break;
             
           default:
