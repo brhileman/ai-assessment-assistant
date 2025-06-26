@@ -16,8 +16,8 @@ class AssessmentController < ApplicationController
   end
   
   def start
-    # Create assessment for this stakeholder
-    @assessment = Assessment.create!(
+    # Find or create assessment for this stakeholder
+    @assessment = @stakeholder.assessment || Assessment.create!(
       stakeholder: @stakeholder
     )
     

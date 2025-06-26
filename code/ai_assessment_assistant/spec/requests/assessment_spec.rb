@@ -38,15 +38,29 @@ RSpec.describe "Assessments", type: :request do
 
   describe "POST /assessment/:token/start" do
     context "with valid stakeholder token" do
-      it "creates assessment and redirects to voice interface" do
-        expect {
-          post start_assessment_path(stakeholder.invitation_token)
-        }.to change { Assessment.count }.by(1)
+      context "when no assessment exists" do
+        it "creates assessment and redirects to voice interface" do
+          expect {
+            post start_assessment_path(stakeholder.invitation_token)
+          }.to change { Assessment.count }.by(1)
+          
+          assessment = Assessment.last
+          expect(assessment.stakeholder).to eq(stakeholder)
+          expect(stakeholder.reload.status).to eq("invited")
+          expect(response).to redirect_to(voice_assessment_path(stakeholder.invitation_token))
+        end
+      end
+
+      context "when assessment already exists" do
+        let!(:existing_assessment) { create(:assessment, stakeholder: stakeholder) }
         
-        assessment = Assessment.last
-        expect(assessment.stakeholder).to eq(stakeholder)
-        expect(stakeholder.reload.status).to eq("invited")
-        expect(response).to redirect_to(voice_assessment_path(stakeholder.invitation_token))
+        it "does not create a new assessment and redirects to voice interface" do
+          expect {
+            post start_assessment_path(stakeholder.invitation_token)
+          }.not_to change { Assessment.count }
+          
+          expect(response).to redirect_to(voice_assessment_path(stakeholder.invitation_token))
+        end
       end
     end
 

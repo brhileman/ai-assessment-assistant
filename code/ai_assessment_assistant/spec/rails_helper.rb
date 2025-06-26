@@ -14,10 +14,17 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'selenium-webdriver'
+require 'webmock/rspec'
 
 # Configure Capybara
 Capybara.default_driver = :selenium_chrome_headless
 Capybara.server = :puma
+
+# Configure WebMock to allow localhost connections for Capybara
+WebMock.disable_net_connect!(
+  allow_localhost: true,
+  allow: 'chromedriver.storage.googleapis.com'
+)
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
