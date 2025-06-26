@@ -1,5 +1,5 @@
 class AssessmentMailer < ApplicationMailer
-  default from: 'AI Assessment Team <assessment@launchpadlab.com>',
+  default from: 'AI Assessment Team <brett@launchpadlab.com>',
           reply_to: 'assessment@launchpadlab.com'
 
   # Subject can be set in your I18n file at config/locales/en.yml
