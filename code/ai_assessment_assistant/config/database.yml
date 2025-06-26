@@ -79,8 +79,18 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  adapter: postgresql
-  encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  url: <%= ENV['DATABASE_URL'] %>
+  primary:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+  cache:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    database_tasks: false
+  queue:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    database_tasks: false
+  cable:
+    <<: *default
+    url: <%= ENV['DATABASE_URL'] %>
+    database_tasks: false
