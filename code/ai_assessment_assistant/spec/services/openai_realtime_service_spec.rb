@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'webmock/rspec'
 
 RSpec.describe OpenaiRealtimeService do
   let(:company) { create(:company) }
@@ -20,7 +21,10 @@ RSpec.describe OpenaiRealtimeService do
       before do
         allow(ENV).to receive(:[]).and_call_original
         allow(ENV).to receive(:[]).with('OPENAI_API_KEY').and_return(nil)
+        allow(ENV).to receive(:[]).with('OPENAI_ORGANIZATION_ID').and_return(nil)
+        allow(Rails.application.credentials).to receive(:dig).and_call_original
         allow(Rails.application.credentials).to receive(:dig).with(:openai, :api_key).and_return('test-api-key')
+        allow(Rails.application.credentials).to receive(:dig).with(:openai, :organization_id).and_return('test-org-id')
       end
       
       it 'initializes successfully' do

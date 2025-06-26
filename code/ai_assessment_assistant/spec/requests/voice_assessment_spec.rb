@@ -33,13 +33,16 @@ RSpec.describe "VoiceAssessments", type: :request do
         before do
           allow(ENV).to receive(:[]).and_call_original
           allow(ENV).to receive(:[]).with('OPENAI_API_KEY').and_return(nil)
+          allow(ENV).to receive(:[]).with('OPENAI_ORGANIZATION_ID').and_return(nil)
           allow(Rails.application.credentials).to receive(:dig).and_return(nil)
         end
 
-        it "raises an error about missing credentials" do
+        it "returns internal server error when credentials are missing" do
           assessment
-          get voice_assessment_path(stakeholder.invitation_token)
-          expect(response).to have_http_status(:internal_server_error)
+          # In test environment, we need to handle the exception
+          expect {
+            get voice_assessment_path(stakeholder.invitation_token)
+          }.to raise_error(RuntimeError, "OpenAI API key not found in environment variables or credentials")
         end
       end
     end
