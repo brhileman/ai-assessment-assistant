@@ -183,7 +183,7 @@ class OpenaiRealtimeService
 
       Here is context on this company and our current arrangement: #{company_context}
 
-      Use open-ended questions to encourage them to explain in detail.  Begin by asking about the stakeholder's role and team objectives. Learn about their operational day to day largest challenges and pain points. Learn about how they currently use AI today and how they see it possibly being used in the future. Learn about their organization and any challenges we may encounter when implementing new technology or processes. 
+      Use open-ended questions to encourage them to explain in detail.  Begin by asking about the stakeholder's role and team objectives. Learn about their operational day to day largest challenges and pain points before diving into AI specifically. Then, learn about how they currently use AI today and how they see it possibly being used in the future. Learn about their organization and any challenges we may encounter when implementing AI technology or AI processes. 
 
       Keep your tone warm, curious, and engaging. Do not sound like a scripted questionnaire – instead, aim for a natural back-and-forth. Listen actively and adapt your next question based on the stakeholder's answers. For example, if they mention a specific tool or step, follow up on that. Maintain context throughout so you can ask relevant follow-up questions as the conversation evolves. Finally, thank the stakeholder for their time and ask if there's anything else they'd like to add, and finally instruct them to use the "Finish Assessment" button to conclude the conversation.
     INSTRUCTIONS
