@@ -3,16 +3,11 @@ class OpenaiRealtimeService
     @stakeholder = stakeholder
     @company = stakeholder.company
     
-    # Handle credentials safely
-    openai_credentials = Rails.application.credentials.openai
-    if openai_credentials.nil?
-      raise "OpenAI credentials section not found in Rails credentials"
-    end
+    # Handle credentials safely - check environment variables first (for production)
+    @api_key = ENV['OPENAI_API_KEY'] || Rails.application.credentials.dig(:openai, :api_key)
+    @organization_id = ENV['OPENAI_ORGANIZATION_ID'] || Rails.application.credentials.dig(:openai, :organization_id)
     
-    @api_key = openai_credentials[:api_key]
-    @organization_id = openai_credentials[:organization_id]
-    
-    raise "OpenAI API key not found in credentials" if @api_key.blank?
+    raise "OpenAI API key not found in environment variables or credentials" if @api_key.blank?
   end
   
   def create_conversation_session
