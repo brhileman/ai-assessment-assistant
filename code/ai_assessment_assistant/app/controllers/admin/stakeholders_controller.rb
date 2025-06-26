@@ -25,6 +25,7 @@ class Admin::StakeholdersController < ApplicationController
       # Send invitation email
       begin
         AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+        @stakeholder.update_column(:invitation_sent_at, Time.current)
         flash[:notice] = "Stakeholder #{@stakeholder.name} has been added and invitation email sent to #{@stakeholder.email}."
       rescue => e
         Rails.logger.error "Failed to send invitation email to #{@stakeholder.email}: #{e.message}"
@@ -40,6 +41,7 @@ class Admin::StakeholdersController < ApplicationController
   def resend_invitation
     begin
       AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+      @stakeholder.update_column(:invitation_sent_at, Time.current)
       flash[:notice] = "Invitation email resent to #{@stakeholder.name} (#{@stakeholder.email})."
     rescue => e
       Rails.logger.error "Failed to resend invitation email to #{@stakeholder.email}: #{e.message}"
