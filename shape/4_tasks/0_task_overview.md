@@ -64,6 +64,7 @@ Company (name, custom_instructions)
 | 1. Admin Authentication | Task 2 | Task 1 (foundation) |
 | 2. Company Management | Task 4 | Task 3 (models) |
 | 3. Stakeholder Invitations | Task 5 | Task 3, 4 |
+| 3.5. Enhanced Dashboard Navigation | Task 4 (enhanced) | Task 3 (models) |
 | 4. Stakeholder Data Linking | Task 3 | Task 6 (landing) |
 | 5. Assessment Invitation Response | Task 6 | Task 5 |
 | 6. Voice Assessment Experience | Task 7 | Task 8 |

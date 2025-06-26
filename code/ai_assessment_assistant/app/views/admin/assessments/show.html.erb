@@ -1,122 +1,153 @@
-<div class="min-h-screen bg-gray-50 py-8">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Breadcrumb Navigation -->
-    <nav class="flex mb-8" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-4">
-        <li>
-          <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
-            Dashboard
-          <% end %>
-        </li>
-        <li>
-          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-        </li>
-        <li>
-          <%= link_to admin_company_path(@company), class: "text-gray-400 hover:text-gray-500" do %>
-            <%= @company.name %>
-          <% end %>
-        </li>
-        <li>
-          <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-          </svg>
-        </li>
-        <li class="text-gray-500">Assessment Results</li>
-      </ol>
-    </nav>
-
-    <!-- Header Section -->
-    <div class="mb-8">
-      <div class="flex justify-between items-start">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900">Assessment Results</h1>
-          <p class="mt-2 text-gray-600"><%= @assessment.stakeholder.name %> • <%= @company.name %></p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Admin Navigation -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo and Title -->
+        <div class="flex items-center">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-8 mr-4" %>
+          <h1 class="text-xl font-semibold text-gray-900">
+            Assessment Results
+          </h1>
         </div>
-        <div class="flex space-x-3">
-          <%= link_to admin_company_path(@company), class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
-            ← Back to Company
-          <% end %>
+        
+        <!-- Admin Info and Logout -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-600">
+            Welcome, <%= current_admin.email %>
+          </span>
+          <%= link_to "Logout", destroy_admin_session_path, method: :delete,
+              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors" %>
         </div>
       </div>
     </div>
+  </nav>
 
-    <!-- Assessment Metadata Card -->
-    <div class="bg-white shadow rounded-lg mb-8">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">Assessment Details</h2>
-      </div>
-      <div class="px-6 py-4">
-        <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Stakeholder</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @assessment.stakeholder.name %></dd>
-            <dd class="mt-1 text-xs text-gray-500"><%= @assessment.stakeholder.email %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Completion Date</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @assessment.completion_date_formatted %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Duration</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @assessment.duration_formatted %></dd>
-          </div>
-          <div>
-            <dt class="text-sm font-medium text-gray-500">Transcript Length</dt>
-            <dd class="mt-1 text-sm text-gray-900"><%= @assessment.transcript_summary %></dd>
-          </div>
-        </dl>
-      </div>
-    </div>
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Breadcrumb Navigation -->
+      <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-4">
+          <li>
+            <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
+              Dashboard
+            <% end %>
+          </li>
+          <li>
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </li>
+          <li>
+            <%= link_to admin_company_path(@company), class: "text-gray-400 hover:text-gray-500" do %>
+              <%= @company.name %>
+            <% end %>
+          </li>
+          <li>
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </li>
+          <li class="text-gray-500">Assessment Results</li>
+        </ol>
+      </nav>
 
-    <!-- Transcript Section -->
-    <div class="bg-white shadow rounded-lg">
-      <div class="px-6 py-4 border-b border-gray-200">
-        <div class="flex justify-between items-center">
-          <h2 class="text-lg font-semibold text-gray-900">Conversation Transcript</h2>
-          <div class="flex items-center space-x-2">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              Completed
-            </span>
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl">
+              Assessment Details
+            </h2>
+            <p class="mt-2 text-gray-600"><%= @assessment.stakeholder.name %> • <%= @company.name %></p>
+          </div>
+          <div class="flex space-x-3">
+            <%= link_to admin_company_path(@company), class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
+              ← Back to Company
+            <% end %>
           </div>
         </div>
       </div>
-      
-      <div class="px-6 py-6">
-        <% if @assessment.full_transcript.present? %>
-          <div class="prose prose-sm max-w-none">
-            <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div class="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                <%= simple_format(@assessment.full_transcript) %>
+
+      <!-- Assessment Metadata Card -->
+      <div class="bg-white shadow rounded-lg mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-900">Assessment Details</h2>
+        </div>
+        <div class="px-6 py-4">
+          <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Stakeholder</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @assessment.stakeholder.name %></dd>
+              <dd class="mt-1 text-xs text-gray-500"><%= @assessment.stakeholder.email %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Completion Date</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @assessment.completion_date_formatted %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Duration</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @assessment.duration_formatted %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Transcript Length</dt>
+              <dd class="mt-1 text-sm text-gray-900"><%= @assessment.transcript_summary %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Transcript Section -->
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-semibold text-gray-900">Conversation Transcript</h2>
+            <div class="flex items-center space-x-2">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Completed
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="px-6 py-6">
+          <% if @assessment.full_transcript.present? %>
+            <div class="prose prose-sm max-w-none">
+              <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                <div class="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                  <%= simple_format(@assessment.full_transcript) %>
+                </div>
               </div>
             </div>
-          </div>
-        <% else %>
-          <div class="text-center py-12">
-            <div class="text-gray-500">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">No Transcript Available</h3>
-              <p class="mt-1 text-sm text-gray-500">The conversation transcript is not available for this assessment.</p>
+          <% else %>
+            <div class="text-center py-12">
+              <div class="text-gray-500">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No Transcript Available</h3>
+                <p class="mt-1 text-sm text-gray-500">The conversation transcript is not available for this assessment.</p>
+              </div>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </div>
       </div>
-    </div>
 
-    <!-- Quick Actions -->
-    <div class="mt-8 flex justify-between items-center">
-      <div class="text-sm text-gray-500">
-        Assessment ID: <%= @assessment.id %> • 
-        Last updated <%= time_ago_in_words(@assessment.updated_at) %> ago
-      </div>
-      <div class="flex space-x-3">
-        <%= link_to admin_company_path(@company), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors" do %>
-          Back to <%= @company.name %>
-        <% end %>
+      <!-- Quick Actions -->
+      <div class="mt-8 flex justify-between items-center">
+        <div class="text-sm text-gray-500">
+          Assessment ID: <%= @assessment.id %> • 
+          Last updated <%= time_ago_in_words(@assessment.updated_at) %> ago
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to admin_company_path(@company), class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors" do %>
+            Back to <%= @company.name %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>

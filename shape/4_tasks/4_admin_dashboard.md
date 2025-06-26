@@ -71,12 +71,26 @@ Create the admin dashboard and company management interface with full CRUD opera
 
 - [ ] 7.0 Create Navigation and Layout
   - [ ] 7.1 Update admin layout with proper navigation
-  - [ ] 7.2 Add breadcrumb navigation for admin pages
+  - [x] 7.2 Add breadcrumb navigation for admin pages
   - [ ] 7.3 Include LaunchPad Lab branding in admin header
   - [ ] 7.4 Add admin user info and logout link
   - [ ] 7.5 Implement responsive sidebar for larger screens
   - [ ] 7.6 Test navigation works across all admin pages
   - [ ] 7.7 Add active page highlighting
+
+- [x] 7.5 Enhanced Dashboard Navigation & UI Cleanup
+  - [x] 7.5.1 Make dashboard tiles clickable (Companies, Stakeholders, Assessments)
+  - [x] 7.5.2 Create "All Stakeholders" list view accessible from dashboard tile
+  - [x] 7.5.3 Create "All Assessments" list view accessible from dashboard tile
+  - [x] 7.5.4 Remove "System Settings" button from dashboard (not needed for MVP)
+  - [x] 7.5.5 Clean up dashboard header text (remove redundant "AI Assessment Assistant - Admin")
+  - [x] 7.5.6 Fix "Show full instructions" functionality in company view (expand/collapse)
+  - [x] 7.5.7 Ensure assessment results page has consistent admin layout (header, gray background)
+  - [x] 7.5.8 Ensure "Add Stakeholder" page has consistent admin layout
+  - [x] 7.5.9 Ensure "Edit Company" page has consistent admin layout
+  - [x] 7.5.10 Ensure "View All Companies" page has consistent admin layout
+  - [x] 7.5.11 Test all clickable tiles navigate correctly
+  - [x] 7.5.12 Add CSV export functionality to company assessment results
 
 - [~] 8.0 Add Search and Filtering *(DEFERRED for MVP)*
   - [~] 8.1 Implement company name search *(Not needed for MVP - simple list sufficient)*
@@ -135,8 +149,10 @@ Create the admin dashboard and company management interface with full CRUD opera
 | `app/views/admin/companies/_form.html.erb` | Company form partial | 5.1 | ✅ |
 | `app/controllers/admin/stakeholders_controller.rb` | Stakeholder CRUD controller | 6.0 | ✅ |
 | `app/views/admin/stakeholders/new.html.erb` | New stakeholder form | 6.2 | ✅ |
+| `app/views/admin/stakeholders/index.html.erb` | All stakeholders list view | 7.5.2 | ✅ |
 | `app/controllers/admin/assessments_controller.rb` | Assessment results controller | 8.1 | ✅ |
 | `app/views/admin/assessments/show.html.erb` | Individual assessment transcript view | 8.3 | ✅ |
+| `app/views/admin/assessments/index.html.erb` | All assessments list view | 7.5.3 | ✅ |
 | `app/views/admin/shared/_navigation.html.erb` | Admin navigation | 7.1 | ⏳ |
 | `app/views/admin/shared/_stakeholder.html.erb` | Stakeholder list item | 6.1 | ✅ |
 | `spec/controllers/admin/dashboard_controller_spec.rb` | Dashboard tests | 10.1 | ⏳ |
@@ -151,9 +167,18 @@ Create the admin dashboard and company management interface with full CRUD opera
 |-----------|---------|----------|--------|
 | `config/routes.rb` | Add admin namespace routes | 2.2 | ✅ |
 | `config/routes.rb` | Add assessment results routes | 8.2 | ✅ |
+| `config/routes.rb` | Add stakeholder index and assessment index routes | 7.5.2, 7.5.3 | ✅ |
 | `app/views/layouts/admin.html.erb` | Update admin layout | 7.1 | ⏳ |
 | `app/views/admin/companies/show.html.erb` | Update "View" links to work properly | 8.7 | ✅ |
+| `app/views/admin/companies/show.html.erb` | Fix "Show full instructions" functionality | 7.5.6 | ✅ |
+| `app/views/admin/companies/show.html.erb` | Add CSV export functionality | 7.5.12 | ✅ |
 | `app/views/admin/dashboard/index.html.erb` | Add clickable links to Recent Activity feed | 8.8 | ✅ |
+| `app/views/admin/dashboard/index.html.erb` | Make dashboard tiles clickable | 7.5.1 | ✅ |
+| `app/views/admin/dashboard/index.html.erb` | Remove system settings button | 7.5.4 | ✅ |
+| `app/views/admin/dashboard/index.html.erb` | Clean up header text | 7.5.5 | ✅ |
+| `app/controllers/admin/stakeholders_controller.rb` | Add index action for all stakeholders view | 7.5.2 | ✅ |
+| `app/controllers/admin/assessments_controller.rb` | Add index action for all assessments view | 7.5.3 | ✅ |
+| `app/controllers/admin/companies_controller.rb` | Add CSV export action | 7.5.12 | ✅ |
 
 ## Dashboard Overview Mockup
 

@@ -46,10 +46,18 @@ Rails.application.routes.draw do
       
       # Assessment results routes nested under companies
       resources :assessments, only: [:show], path: 'assessments'
+      
+      # CSV export for company assessment results
+      member do
+        get :export_assessments
+      end
     end
     
     # Direct assessment access routes (for dashboard links)
-    resources :assessments, only: [:show]
+    resources :assessments, only: [:show, :index]
+    
+    # All stakeholders list view (for dashboard tile)
+    resources :stakeholders, only: [:index]
   end
   
   # Welcome page routes

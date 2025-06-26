@@ -4,11 +4,9 @@ Hi <%= @stakeholder.name %>,
 
 You've been invited by <%= @company.name %> to participate in an AI readiness assessment.
 
-<% if @company.custom_instructions.present? %>
-About this assessment:
-<%= @company.custom_instructions %>
+Hi from LaunchPad Lab!
 
-<% end %>
+We've been tasked with helping complete an AI assessment for your organization. Step one is just learning more about you and what your day-to-day looks like. And this assessment AI assistant we've created helps get the process started.
 START YOUR ASSESSMENT:
 <%= @assessment_url %>
 

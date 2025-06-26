@@ -1,8 +1,15 @@
 class Admin::StakeholdersController < ApplicationController
   before_action :authenticate_admin!
-  before_action :find_company
+  before_action :find_company, except: [:index]
   before_action :find_stakeholder, only: [:destroy, :resend_invitation]
   layout 'admin'
+
+  def index
+    @stakeholders = Stakeholder.includes(:company, :assessment).order(created_at: :desc)
+    @total_stakeholders = @stakeholders.count
+    @completed_assessments = @stakeholders.joins(:assessment).where.not(assessments: { completed_at: nil }).count
+    @pending_assessments = @total_stakeholders - @completed_assessments
+  end
 
   def new
     @stakeholder = @company.stakeholders.build
@@ -18,6 +25,7 @@ class Admin::StakeholdersController < ApplicationController
       # Send invitation email
       begin
         AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+        @stakeholder.update_column(:invitation_sent_at, Time.current)
         flash[:notice] = "Stakeholder #{@stakeholder.name} has been added and invitation email sent to #{@stakeholder.email}."
       rescue => e
         Rails.logger.error "Failed to send invitation email to #{@stakeholder.email}: #{e.message}"
@@ -33,6 +41,7 @@ class Admin::StakeholdersController < ApplicationController
   def resend_invitation
     begin
       AssessmentMailer.stakeholder_invitation(@stakeholder).deliver_now
+      @stakeholder.update_column(:invitation_sent_at, Time.current)
       flash[:notice] = "Invitation email resent to #{@stakeholder.name} (#{@stakeholder.email})."
     rescue => e
       Rails.logger.error "Failed to resend invitation email to #{@stakeholder.email}: #{e.message}"
@@ -57,7 +66,7 @@ class Admin::StakeholdersController < ApplicationController
   end
 
   def find_stakeholder
-    @stakeholder = @company.stakeholders.find_by!(invitation_token: params[:id])
+    @stakeholder = @company.stakeholders.find_by!(invitation_token: params[:token])
   end
 
   def stakeholder_params

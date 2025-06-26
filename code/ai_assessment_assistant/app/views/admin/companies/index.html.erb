@@ -1,112 +1,163 @@
-<div class="min-h-screen bg-gray-50 py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header Section -->
-    <div class="mb-8">
-      <div class="flex justify-between items-center">
-        <div>
-          <h1 class="text-3xl font-bold text-gray-900">Companies</h1>
-          <p class="mt-2 text-gray-600">Manage companies and their assessment programs</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Admin Navigation -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <!-- Logo and Title -->
+        <div class="flex items-center">
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+              alt: "LaunchPad Lab", 
+              class: "h-8 mr-4" %>
+          <h1 class="text-xl font-semibold text-gray-900">
+            Companies
+          </h1>
         </div>
-        <%= link_to new_admin_company_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" do %>
-          <span class="mr-2">+</span>Add Company
-        <% end %>
+        
+        <!-- Admin Info and Logout -->
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-600">
+            Welcome, <%= current_admin.email %>
+          </span>
+          <%= link_to "Logout", destroy_admin_session_path, method: :delete,
+              class: "bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors" %>
+        </div>
       </div>
     </div>
+  </nav>
 
-    <!-- Simple company list for MVP - no search/filter needed -->
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+      <!-- Breadcrumb Navigation -->
+      <nav class="flex mb-8" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-4">
+          <li>
+            <%= link_to admin_root_path, class: "text-gray-400 hover:text-gray-500" do %>
+              Dashboard
+            <% end %>
+          </li>
+          <li>
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </li>
+          <li class="text-gray-500">Companies</li>
+        </ol>
+      </nav>
 
-    <!-- Companies Table -->
-    <div class="bg-white shadow rounded-lg overflow-hidden">
-      <% if @companies.any? %>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stakeholders</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion Rate</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <% @companies.each do |company| %>
-                <tr class="hover:bg-gray-50">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <div class="text-sm font-medium text-gray-900">
-                        <%= link_to company.name, admin_company_path(company), class: "text-blue-600 hover:text-blue-800" %>
-                      </div>
-                      <div class="text-sm text-gray-500">
-                        <%= truncate(company.custom_instructions, length: 60) if company.custom_instructions.present? %>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm text-gray-900"><%= company.stakeholders.count %></div>
-                    <div class="text-sm text-gray-500">stakeholders</div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <% completion_rate = company.completion_rate %>
-                    <div class="flex items-center">
-                      <div class="flex-1 bg-gray-200 rounded-full h-2 mr-2">
-                        <div class="bg-green-600 h-2 rounded-full" style="width: <%= completion_rate %>%"></div>
-                      </div>
-                      <span class="text-sm font-medium text-gray-900"><%= completion_rate %>%</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <% last_assessment = company.assessments.order(completed_at: :desc).first %>
-                    <% if last_assessment&.completed_at %>
-                      <div class="text-sm text-gray-900"><%= time_ago_in_words(last_assessment.completed_at) %> ago</div>
-                      <div class="text-sm text-gray-500">assessment completed</div>
-                    <% else %>
-                      <div class="text-sm text-gray-500">No activity</div>
-                    <% end %>
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div class="flex space-x-2">
-                      <%= link_to "View", admin_company_path(company), class: "text-blue-600 hover:text-blue-900" %>
-                      <%= link_to "Edit", edit_admin_company_path(company), class: "text-indigo-600 hover:text-indigo-900" %>
-                      <%= link_to "Delete", admin_company_path(company), method: :delete,
-                            confirm: "Are you sure you want to delete #{company.name}?",
-                            class: "text-red-600 hover:text-red-900" %>
-                    </div>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      <% else %>
-        <div class="text-center py-12">
-          <div class="text-gray-500">
-            <h3 class="text-lg font-medium mb-2">No companies yet</h3>
-            <p class="mb-4">Get started by adding your first company</p>
+      <!-- Header Section -->
+      <div class="mb-8">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl">
+              Company Management
+            </h2>
+            <p class="mt-2 text-gray-600">Manage companies and their assessment programs</p>
+          </div>
+          <div class="flex space-x-3">
+            <%= link_to admin_root_path, class: "bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors" do %>
+              ← Back to Dashboard
+            <% end %>
             <%= link_to new_admin_company_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" do %>
               <span class="mr-2">+</span>Add Company
             <% end %>
           </div>
         </div>
+      </div>
+
+      <!-- Companies Table -->
+      <div class="bg-white shadow rounded-lg overflow-hidden">
+        <% if @companies.any? %>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stakeholders</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Completion Rate</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Activity</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% @companies.each do |company| %>
+                  <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div>
+                        <div class="text-sm font-medium text-gray-900">
+                          <%= link_to company.name, admin_company_path(company), class: "text-blue-600 hover:text-blue-800" %>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                          <%= truncate(company.custom_instructions, length: 60) if company.custom_instructions.present? %>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900"><%= company.stakeholders.count %></div>
+                      <div class="text-sm text-gray-500">stakeholders</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <% completion_rate = company.completion_rate %>
+                      <div class="flex items-center">
+                        <div class="flex-1 bg-gray-200 rounded-full h-2 mr-2">
+                          <div class="bg-green-600 h-2 rounded-full" style="width: <%= completion_rate %>%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900"><%= completion_rate %>%</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <% last_assessment = company.assessments.order(completed_at: :desc).first %>
+                      <% if last_assessment&.completed_at %>
+                        <div class="text-sm text-gray-900"><%= time_ago_in_words(last_assessment.completed_at) %> ago</div>
+                        <div class="text-sm text-gray-500">assessment completed</div>
+                      <% else %>
+                        <div class="text-sm text-gray-500">No activity</div>
+                      <% end %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <div class="flex space-x-2">
+                        <%= link_to "View", admin_company_path(company), class: "text-blue-600 hover:text-blue-900" %>
+                        <%= link_to "Edit", edit_admin_company_path(company), class: "text-indigo-600 hover:text-indigo-900" %>
+                        <%= link_to "Delete", admin_company_path(company), method: :delete,
+                              confirm: "Are you sure you want to delete #{company.name}?",
+                              class: "text-red-600 hover:text-red-900" %>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="text-gray-500">
+              <h3 class="text-lg font-medium mb-2">No companies yet</h3>
+              <p class="mb-4">Get started by adding your first company</p>
+              <%= link_to new_admin_company_path, class: "bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors" do %>
+                <span class="mr-2">+</span>Add Company
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Summary Stats -->
+      <% if @companies.any? %>
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-2xl font-bold text-blue-600"><%= @companies.count %></div>
+            <div class="text-gray-600">Total Companies</div>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-2xl font-bold text-green-600"><%= @companies.sum { |c| c.stakeholders.count } %></div>
+            <div class="text-gray-600">Total Stakeholders</div>
+          </div>
+          <div class="bg-white p-6 rounded-lg shadow">
+            <div class="text-2xl font-bold text-purple-600"><%= @companies.sum { |c| c.assessments.completed.count } %></div>
+            <div class="text-gray-600">Completed Assessments</div>
+          </div>
+        </div>
       <% end %>
     </div>
-
-    <!-- Summary Stats -->
-    <% if @companies.any? %>
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-2xl font-bold text-blue-600"><%= @companies.count %></div>
-          <div class="text-gray-600">Total Companies</div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-2xl font-bold text-green-600"><%= @companies.sum { |c| c.stakeholders.count } %></div>
-          <div class="text-gray-600">Total Stakeholders</div>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <div class="text-2xl font-bold text-purple-600"><%= @companies.sum { |c| c.assessments.completed.count } %></div>
-          <div class="text-gray-600">Completed Assessments</div>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  </main>
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_20_131041) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_26_025257) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,6 +58,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_20_131041) do
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "invitation_sent_at"
     t.index ["company_id", "email"], name: "index_stakeholders_on_company_id_and_email", unique: true
     t.index ["company_id"], name: "index_stakeholders_on_company_id"
     t.index ["invitation_token"], name: "index_stakeholders_on_invitation_token", unique: true

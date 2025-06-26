@@ -10,7 +10,7 @@
               alt: "LaunchPad Lab", 
               class: "h-8 mr-4" %>
           <h1 class="text-xl font-semibold text-gray-900">
-            AI Assessment Assistant - Admin
+            Admin Dashboard
           </h1>
         </div>
         
@@ -42,7 +42,7 @@
       <!-- Overview Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Companies Card -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <%= link_to admin_companies_path, class: "block bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-200" do %>
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -63,10 +63,10 @@
               </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
         <!-- Stakeholders Card -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <%= link_to admin_stakeholders_path, class: "block bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-200" do %>
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -89,10 +89,10 @@
               </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
         <!-- Assessments Card -->
-        <div class="bg-white overflow-hidden shadow rounded-lg">
+        <%= link_to admin_assessments_path, class: "block bg-white overflow-hidden shadow rounded-lg hover:shadow-lg transition-shadow duration-200" do %>
           <div class="p-5">
             <div class="flex items-center">
               <div class="flex-shrink-0">
@@ -113,7 +113,7 @@
               </div>
             </div>
           </div>
-        </div>
+        <% end %>
 
         <!-- Performance Card -->
         <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -206,8 +206,6 @@
                 <%= link_to "Add New Company", new_admin_company_path, 
                     class: "w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors text-center block" %>
                 <%= link_to "View All Companies", admin_companies_path, 
-                    class: "w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors text-center block" %>
-                <%= link_to "System Settings", "#", 
                     class: "w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors text-center block" %>
               </div>
             </div>

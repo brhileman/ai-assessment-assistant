@@ -30,11 +30,12 @@ Administrators need to onboard new clients and manage multiple company assessmen
 - [ ] View company assessment status/progress
 - [ ] Delete company with confirmation dialog
 - [ ] Custom instructions passed to AI agent during stakeholder assessments
+- [ ] "Show full instructions" functionality works properly in company view (expand/collapse long instructions)
 
 ## Key Screens
 - Companies list page (simple list)
 - Add/edit company form (with custom instructions field)
-- Company detail/dashboard page
+- Company detail/dashboard page (with working "Show full instructions" toggle)
 
 ## Custom Instructions Feature
 - **Purpose**: Provide company-specific guidance to AI agent
@@ -44,6 +45,7 @@ Administrators need to onboard new clients and manage multiple company assessmen
   - "Pay special attention to data privacy concerns in this industry"
 - **Implementation**: Text area field on company form, passed to AI agent context
 - **Character limit**: 500-1000 characters to keep instructions focused
+- **Display**: Show truncated version with "Show full instructions" toggle for long instructions
 
 ## MVP Decisions
 - **Search/filter**: Not implemented for MVP - simple company list is sufficient

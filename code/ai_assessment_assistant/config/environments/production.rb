@@ -15,6 +15,9 @@ Rails.application.configure do
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
+  # Disable Rails's static file server (Heroku will serve static files)
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
@@ -70,17 +73,17 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_url_options = { 
-    host: ENV.fetch('MAILER_HOST', 'your-production-domain.com'),
+    host: ENV.fetch('HEROKU_APP_NAME', 'ai-assessment-assistant') + '.herokuapp.com',
     protocol: 'https'
   }
   
   config.action_mailer.smtp_settings = {
+    user_name: ENV['SENDGRID_USERNAME'],
+    password: ENV['SENDGRID_PASSWORD'],
+    domain: ENV.fetch('HEROKU_APP_NAME', 'ai-assessment-assistant') + '.herokuapp.com',
     address: 'smtp.sendgrid.net',
     port: 587,
-    domain: ENV.fetch('MAILER_DOMAIN', 'your-production-domain.com'),
-    user_name: 'apikey',
-    password: Rails.application.credentials.sendgrid[:api_key],
-    authentication: 'plain',
+    authentication: :plain,
     enable_starttls_auto: true
   }
 

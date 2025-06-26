@@ -10,6 +10,12 @@ Core admin functionality to get started:
 2. **[Company Management](./02_company_management.md)** - Creating and managing client companies
 3. **[Stakeholder Invitation Management](./03_stakeholder_invitation_management.md)** - Sending assessment invitations and tracking
 
+## 📊 Enhanced Admin Navigation (Story 3.5)
+
+Improved dashboard navigation:
+
+3.5. **[Enhanced Dashboard Navigation](./03_5_enhanced_dashboard_navigation.md)** - Clickable dashboard tiles and improved admin interface
+
 ## 🔧 Technical Architecture (Story 4)
 
 Core system architecture:
@@ -68,7 +74,7 @@ Important limitations and decisions for the MVP:
 - **Admin Account Creation**: Manual admin setup only (no public registration)
 - **Simple UI**: Default Devise views and basic styling for speed of implementation
 
-## �� Story Format
+## 📚 Story Format
 
 Each story follows a consistent format:
 - **User story statement** (As a... I want... So that...)

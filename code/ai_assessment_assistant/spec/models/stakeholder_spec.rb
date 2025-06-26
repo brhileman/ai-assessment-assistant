@@ -73,10 +73,10 @@ RSpec.describe Stakeholder, type: :model do
     end
     
     describe 'invitation_token validation' do
-      it 'requires an invitation_token' do
+      it 'auto-generates invitation_token if not provided' do
         stakeholder.invitation_token = nil
-        expect(stakeholder).not_to be_valid
-        expect(stakeholder.errors[:invitation_token]).to include("can't be blank")
+        expect(stakeholder).to be_valid
+        expect(stakeholder.invitation_token).to be_present
       end
       
       it 'requires invitation_token to be unique' do
@@ -151,10 +151,13 @@ RSpec.describe Stakeholder, type: :model do
       stakeholder = create(:stakeholder)
       
       stakeholder.assessment_started!
+      expect(stakeholder.status).to eq('assessment_started')
       expect(stakeholder.assessment_started?).to be true
       
       stakeholder.assessment_completed!
-      expect(stakeholder.assessment_completed?).to be true
+      expect(stakeholder.status).to eq('assessment_completed')
+      # Note: stakeholder.assessment_completed? checks if assessment.completed_at is present,
+      # not the status enum. Use stakeholder.status == 'assessment_completed' for enum check
     end
   end
   
@@ -307,6 +310,43 @@ RSpec.describe Stakeholder, type: :model do
     end
   end
   
+  describe 'invitation tracking' do
+    describe '#invitation_sent_at' do
+      it 'can be set and retrieved' do
+        timestamp = Time.current
+        stakeholder.invitation_sent_at = timestamp
+        stakeholder.save!
+        
+        expect(stakeholder.reload.invitation_sent_at).to be_within(1.second).of(timestamp)
+      end
+      
+      it 'can be nil initially' do
+        stakeholder = create(:stakeholder)
+        expect(stakeholder.invitation_sent_at).to be_nil
+      end
+      
+      it 'can be updated' do
+        stakeholder = create(:stakeholder, invitation_sent_at: 2.days.ago)
+        new_timestamp = Time.current
+        
+        stakeholder.update!(invitation_sent_at: new_timestamp)
+        expect(stakeholder.invitation_sent_at).to be_within(1.second).of(new_timestamp)
+      end
+    end
+    
+    describe '#invitation_sent_at?' do
+      it 'returns true when invitation_sent_at is present' do
+        stakeholder = create(:stakeholder, invitation_sent_at: Time.current)
+        expect(stakeholder.invitation_sent_at?).to be true
+      end
+      
+      it 'returns false when invitation_sent_at is nil' do
+        stakeholder = create(:stakeholder, invitation_sent_at: nil)
+        expect(stakeholder.invitation_sent_at?).to be false
+      end
+    end
+  end
+
   describe 'helper methods' do
     describe '#to_param' do
       it 'returns the invitation_token for URL generation' do

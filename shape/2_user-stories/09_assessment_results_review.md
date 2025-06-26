@@ -27,15 +27,17 @@ Administrators need easy access to conversation transcripts to understand client
 - [x] Full transcript display with timestamps
 - [x] Assessment metadata (duration, completion date, stakeholder info)
 - [x] Consistent access from multiple entry points (company view + dashboard)
+- [ ] Export assessment results functionality (CSV format)
 
 ## Key Screens
 - Main admin dashboard with clickable Recent Activity feed
 - Company assessment results dashboard
 - Individual transcript viewer
+- Assessment export interface
 
 ## MVP Decisions
 - **Search functionality**: Not implemented for MVP - basic scrolling sufficient
 - **Admin notes/comments**: Not needed for MVP
-- **Export functionality**: Not needed for MVP - admins can copy/paste if needed
+- **Export functionality**: Basic CSV export for assessment data and transcripts
 - **Advanced analytics**: Not needed for MVP
 - **AI-powered summarization**: Not needed for MVP
