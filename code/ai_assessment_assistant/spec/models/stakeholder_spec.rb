@@ -137,7 +137,6 @@ RSpec.describe Stakeholder, type: :model do
     it 'has correct status values' do
       expect(Stakeholder.statuses).to eq({
         'invited' => 0,
-        'assessment_started' => 1,
         'assessment_completed' => 2
       })
     end
@@ -149,10 +148,6 @@ RSpec.describe Stakeholder, type: :model do
     
     it 'allows status transitions' do
       stakeholder = create(:stakeholder)
-      
-      stakeholder.assessment_started!
-      expect(stakeholder.status).to eq('assessment_started')
-      expect(stakeholder.assessment_started?).to be true
       
       stakeholder.assessment_completed!
       expect(stakeholder.status).to eq('assessment_completed')
@@ -183,13 +178,12 @@ RSpec.describe Stakeholder, type: :model do
     end
     
     describe '.pending_assessments' do
-      it 'returns stakeholders with invited or assessment_started status' do
+      it 'returns stakeholders with invited status' do
         invited_stakeholder = create(:stakeholder, status: :invited)
-        started_stakeholder = create(:stakeholder, status: :assessment_started)
         completed_stakeholder = create(:stakeholder, status: :assessment_completed)
         
         result = Stakeholder.pending_assessments
-        expect(result).to include(invited_stakeholder, started_stakeholder)
+        expect(result).to include(invited_stakeholder)
         expect(result).not_to include(completed_stakeholder)
       end
     end
@@ -214,21 +208,7 @@ RSpec.describe Stakeholder, type: :model do
       end
     end
     
-    describe '#assessment_in_progress?' do
-      it 'returns false when no assessment exists' do
-        expect(stakeholder.assessment_in_progress?).to be false
-      end
-      
-      it 'returns true when assessment exists but not completed' do
-        create(:assessment, stakeholder: stakeholder, completed_at: nil)
-        expect(stakeholder.assessment_in_progress?).to be true
-      end
-      
-      it 'returns false when assessment is completed' do
-        create(:assessment, stakeholder: stakeholder, completed_at: Time.current)
-        expect(stakeholder.assessment_in_progress?).to be false
-      end
-    end
+
     
     describe '#can_start_assessment?' do
       it 'returns true when invited and no assessment exists' do
@@ -242,7 +222,7 @@ RSpec.describe Stakeholder, type: :model do
       end
       
       it 'returns false when not in invited status' do
-        stakeholder.update!(status: :assessment_started)
+        stakeholder.update!(status: :assessment_completed)
         expect(stakeholder.can_start_assessment?).to be false
       end
     end
@@ -255,15 +235,15 @@ RSpec.describe Stakeholder, type: :model do
         expect(stakeholder.assessment_completed?).to be true
       end
       
-      it 'sets status to assessment_started when assessment exists but not completed' do
+      it 'sets status to invited when assessment exists but not completed' do
         create(:assessment, stakeholder: stakeholder, completed_at: nil)
         stakeholder.update_status_based_on_assessment!
         
-        expect(stakeholder.assessment_started?).to be true
+        expect(stakeholder.invited?).to be true
       end
       
       it 'sets status to invited when no assessment exists' do
-        stakeholder.update!(status: :assessment_started)
+        stakeholder.update!(status: :assessment_completed)
         stakeholder.update_status_based_on_assessment!
         
         expect(stakeholder.invited?).to be true
@@ -368,8 +348,11 @@ RSpec.describe Stakeholder, type: :model do
     
     describe '#display_status' do
       it 'returns humanized status' do
-        stakeholder.status = :assessment_started
-        expect(stakeholder.display_status).to eq('Assessment started')
+        stakeholder.status = :invited
+        expect(stakeholder.display_status).to eq('Invited')
+        
+        stakeholder.status = :assessment_completed
+        expect(stakeholder.display_status).to eq('Assessment completed')
       end
     end
     

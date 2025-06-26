@@ -13,10 +13,10 @@ RSpec.describe "Assessments", type: :request do
     end
 
     context "with assessment already started" do
-      it "redirects to voice assessment interface" do
+      it "shows landing page when assessment exists but not completed" do
         create(:assessment, stakeholder: stakeholder)
         get assessment_path(stakeholder.invitation_token)
-        expect(response).to redirect_to(voice_assessment_path(stakeholder.invitation_token))
+        expect(response).to have_http_status(:success)
       end
     end
 
@@ -45,7 +45,7 @@ RSpec.describe "Assessments", type: :request do
         
         assessment = Assessment.last
         expect(assessment.stakeholder).to eq(stakeholder)
-        expect(stakeholder.reload.status).to eq("assessment_started")
+        expect(stakeholder.reload.status).to eq("invited")
         expect(response).to redirect_to(voice_assessment_path(stakeholder.invitation_token))
       end
     end

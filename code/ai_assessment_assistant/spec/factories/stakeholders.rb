@@ -11,13 +11,7 @@ FactoryBot.define do
       name { "#{Faker::Name.first_name} #{Faker::Name.last_name} #{Faker::Name.suffix}" }
     end
     
-    trait :assessment_started do
-      status { :assessment_started }
-      
-      after(:create) do |stakeholder|
-        create(:assessment, stakeholder: stakeholder, completed_at: nil)
-      end
-    end
+
     
     trait :assessment_completed do
       status { :assessment_completed }

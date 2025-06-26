@@ -56,8 +56,8 @@
         <div class="text-gray-600">Completed Assessments</div>
       </div>
       <div class="bg-white p-6 rounded-lg shadow">
-        <div class="text-2xl font-bold text-yellow-600"><%= @stakeholders.joins(:assessment).where(assessments: { completed_at: nil }).count %></div>
-        <div class="text-gray-600">In Progress</div>
+        <div class="text-2xl font-bold text-yellow-600"><%= @stakeholders.where(status: :invited).count %></div>
+        <div class="text-gray-600">Pending</div>
       </div>
       <div class="bg-white p-6 rounded-lg shadow">
         <div class="text-2xl font-bold text-purple-600"><%= @completion_rate %>%</div>
@@ -102,10 +102,6 @@
                           <% if stakeholder.assessment&.completed_at %>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                               Completed
-                            </span>
-                          <% elsif stakeholder.assessment %>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                              In Progress
                             </span>
                           <% else %>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -154,10 +150,6 @@
                               title: "View assessment results and transcript" do %>
                           View Results
                         <% end %>
-                      <% elsif stakeholder.assessment %>
-                        <span class="text-xs text-gray-400" title="Assessment in progress">
-                          In Progress
-                        </span>
                       <% end %>
                       <%= link_to admin_company_stakeholder_path(@company, stakeholder), 
                             data: { 

@@ -11,11 +11,8 @@ class AssessmentController < ApplicationController
       return
     end
     
-    # Check if assessment is already started
-    if @stakeholder.assessment&.present?
-      redirect_to voice_assessment_path(@stakeholder.invitation_token)
-      return
-    end
+    # Always show the landing page unless assessment is completed
+    # Users can click "Start Assessment" to begin or continue
   end
   
   def start
@@ -24,8 +21,7 @@ class AssessmentController < ApplicationController
       stakeholder: @stakeholder
     )
     
-    # Update stakeholder status
-    @stakeholder.update!(status: :assessment_started)
+    # Stakeholder status remains :invited until assessment is completed
     
     # Redirect to voice assessment interface
     redirect_to voice_assessment_path(@stakeholder.invitation_token)

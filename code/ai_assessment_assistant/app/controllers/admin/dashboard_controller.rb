@@ -57,7 +57,6 @@ class Admin::DashboardController < ApplicationController
       stakeholders: {
         total: @total_stakeholders,
         invited: Stakeholder.where(status: :invited).count,
-        in_progress: Stakeholder.where(status: :assessment_started).count,
         completed: Stakeholder.where(status: :assessment_completed).count
       },
       assessments: {

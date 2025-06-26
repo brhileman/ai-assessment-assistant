@@ -15,7 +15,6 @@ class Stakeholder < ApplicationRecord
   # Enums for status tracking
   enum :status, { 
     invited: 0, 
-    assessment_started: 1, 
     assessment_completed: 2 
   }
   
@@ -23,7 +22,7 @@ class Stakeholder < ApplicationRecord
   scope :with_assessments, -> { joins(:assessment) }
   scope :without_assessments, -> { left_joins(:assessment).where(assessments: { id: nil }) }
   scope :completed_assessments, -> { joins(:assessment).where.not(assessments: { completed_at: nil }) }
-  scope :pending_assessments, -> { where(status: [:invited, :assessment_started]) }
+  scope :pending_assessments, -> { where(status: :invited) }
   
   # Override to_param for URL generation using UUID token
   def to_param
@@ -35,9 +34,7 @@ class Stakeholder < ApplicationRecord
     assessment&.completed_at.present?
   end
   
-  def assessment_in_progress?
-    assessment.present? && !assessment_completed?
-  end
+
   
   def can_start_assessment?
     invited? && assessment.nil?
@@ -46,8 +43,6 @@ class Stakeholder < ApplicationRecord
   def update_status_based_on_assessment!
     if assessment_completed?
       update!(status: :assessment_completed)
-    elsif assessment.present?
-      update!(status: :assessment_started)
     else
       update!(status: :invited)
     end
