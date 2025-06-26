@@ -7,10 +7,40 @@ RSpec.describe "VoiceAssessments", type: :request do
 
   describe "GET /voice/:token" do
     context "with valid stakeholder token and active assessment" do
+      before do
+        # Mock OpenAI service to prevent actual API calls and test initialization
+        allow_any_instance_of(OpenaiRealtimeService).to receive(:create_conversation_session).and_return({
+          session_id: 'test-session-id',
+          ephemeral_token: 'test-token',
+          api_endpoint: 'test-endpoint'
+        })
+      end
+
       it "returns http success and shows voice assessment interface" do
         assessment # This line triggers the creation of the assessment
         get voice_assessment_path(stakeholder.invitation_token)
         expect(response).to have_http_status(:success)
+      end
+
+      it "initializes OpenAI service without errors" do
+        assessment
+        expect {
+          get voice_assessment_path(stakeholder.invitation_token)
+        }.not_to raise_error
+      end
+
+      context "when OpenAI credentials are missing" do
+        before do
+          allow(ENV).to receive(:[]).and_call_original
+          allow(ENV).to receive(:[]).with('OPENAI_API_KEY').and_return(nil)
+          allow(Rails.application.credentials).to receive(:dig).and_return(nil)
+        end
+
+        it "raises an error about missing credentials" do
+          assessment
+          get voice_assessment_path(stakeholder.invitation_token)
+          expect(response).to have_http_status(:internal_server_error)
+        end
       end
     end
 
