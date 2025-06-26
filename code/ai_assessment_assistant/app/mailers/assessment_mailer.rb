@@ -10,7 +10,7 @@ class AssessmentMailer < ApplicationMailer
   def stakeholder_invitation(stakeholder)
     @stakeholder = stakeholder
     @company = stakeholder.company
-    @assessment_url = stakeholder_assessment_url(@stakeholder.invitation_token, host: host, protocol: protocol)
+    @assessment_url = assessment_url(@stakeholder.invitation_token, host: host, protocol: protocol)
     
     mail(
       to: @stakeholder.email,
@@ -37,7 +37,11 @@ class AssessmentMailer < ApplicationMailer
   private
 
   def host
-    Rails.env.production? ? ENV.fetch('MAILER_HOST', 'assessment.launchpadlab.com') : 'localhost:3000'
+    if Rails.env.production?
+      ENV.fetch('APP_HOST', 'ai-assessment-assistant-9e4a484c0b2f.herokuapp.com')
+    else
+      'localhost:3000'
+    end
   end
 
   def protocol
