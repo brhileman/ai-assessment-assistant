@@ -26,7 +26,11 @@ class AdminMailer < ApplicationMailer
   private
   
   def host
-    Rails.env.production? ? 'your-production-domain.com' : 'localhost'
+    if Rails.env.production?
+      ENV.fetch('HEROKU_APP_NAME', 'ai-assessment-assistant') + '.herokuapp.com'
+    else
+      'localhost'
+    end
   end
   
   def port
