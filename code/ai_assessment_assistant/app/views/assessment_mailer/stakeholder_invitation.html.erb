@@ -4,12 +4,10 @@
 
 <p>You've been invited by <strong><%= @company.name %></strong> to participate in an AI readiness assessment.</p>
 
-<% if @company.custom_instructions.present? %>
-  <div class="company-context">
-    <strong>About this assessment:</strong>
-    <%= simple_format(@company.custom_instructions) %>
-  </div>
-<% end %>
+<div class="company-context">
+  <p><strong>Hi from LaunchPad Lab!</strong></p>
+  <p>We've been tasked with helping complete an AI assessment for your organization. Step one is just learning more about you and what your day-to-day looks like. And this assessment AI assistant we've created helps get the process started.</p>
+</div>
 
 <div class="cta-section">
   <%= link_to "Start Your Assessment", @assessment_url, class: "btn btn-primary" %>
