@@ -188,7 +188,11 @@
   <body>
     <div class="email-container">
       <div class="email-header">
-        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", alt: "LaunchPad Lab", style: "max-width: 200px; height: auto;" %>
+        <% if Rails.env.production? %>
+          <img src="https://ai-assessment-assistant-9e4a484c0b2f.herokuapp.com/Blue-Horizontal-LPL-Logo.svg" alt="LaunchPad Lab" style="max-width: 200px; height: auto; display: block; margin: 0 auto;">
+        <% else %>
+          <%= image_tag "Blue-Horizontal-LPL-Logo.svg", alt: "LaunchPad Lab", style: "max-width: 200px; height: auto; display: block; margin: 0 auto;" %>
+        <% end %>
       </div>
       
       <div class="email-content">

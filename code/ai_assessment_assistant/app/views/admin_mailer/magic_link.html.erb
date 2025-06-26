@@ -1,157 +1,26 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI Assessment Assistant - Admin Login</title>
-    <style>
-      body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-        line-height: 1.6;
-        color: #374151;
-        background-color: #f8fafc;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-      }
-      .header {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        padding: 40px 30px;
-        text-align: center;
-      }
-      .logo {
-        height: 40px;
-        margin-bottom: 20px;
-      }
-      .header-title {
-        color: #ffffff;
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-      }
-      .content {
-        padding: 40px 30px;
-      }
-      .greeting {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 20px;
-      }
-      .message {
-        font-size: 16px;
-        color: #4b5563;
-        margin-bottom: 30px;
-        line-height: 1.7;
-      }
-      .button-container {
-        text-align: center;
-        margin: 40px 0;
-      }
-      .magic-link-button {
-        display: inline-block;
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 16px;
-        text-decoration: none;
-        padding: 16px 32px;
-        border-radius: 8px;
-        box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
-        transition: all 0.3s ease;
-      }
-      .security-notice {
-        background-color: #fef3c7;
-        border: 1px solid #f59e0b;
-        border-radius: 8px;
-        padding: 20px;
-        margin: 30px 0;
-      }
-      .security-title {
-        color: #92400e;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-      .security-text {
-        color: #92400e;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      .footer {
-        background-color: #f8fafc;
-        padding: 30px;
-        text-align: center;
-        border-top: 1px solid #e5e7eb;
-      }
-      .footer-text {
-        color: #6b7280;
-        font-size: 14px;
-        margin: 0;
-      }
-      .alternative-link {
-        margin-top: 20px;
-        padding: 15px;
-        background-color: #f3f4f6;
-        border-radius: 6px;
-        font-size: 12px;
-        color: #6b7280;
-        word-break: break-all;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h1 class="header-title">AI Assessment Assistant</h1>
-        <p style="color: #dbeafe; margin: 10px 0 0 0; font-size: 16px;">Admin Access Portal</p>
-      </div>
-      
-      <div class="content">
-        <div class="greeting">Hello, Admin!</div>
-        
-        <div class="message">
-          You've requested access to the AI Assessment Assistant admin portal. Click the button below to securely log in to your dashboard.
-        </div>
-        
-        <div class="button-container">
-          <%= link_to @magic_link_url, class: "magic-link-button" do %>
-            Access Admin Dashboard
-          <% end %>
-        </div>
-        
-        <div class="security-notice">
-          <div class="security-title">🔒 Security Information</div>
-          <div class="security-text">
-            This magic link will expire in <strong>1 hour</strong> and can only be used once. 
-            If you didn't request this login link, please ignore this email and contact your system administrator.
-          </div>
-        </div>
-        
-        <div class="message">
-          For security reasons, this link can only be used from the device where you requested it. 
-          If you have any issues accessing the admin panel, please contact support.
-        </div>
-        
-        <div class="alternative-link">
-          <strong>Alternative access:</strong><br>
-          If the button doesn't work, copy and paste this URL into your browser:<br>
-          <%= @magic_link_url %>
-        </div>
-      </div>
-      
-      <div class="footer">
-        <p class="footer-text">
-          © <%= Date.current.year %> LaunchPad Lab. All rights reserved.<br>
-          AI Assessment Assistant - Secure Admin Portal
-        </p>
-      </div>
-    </div>
-  </body>
-</html>
+<% content_for :title, "AI Assessment Assistant - Admin Login" %>
+
+<h1>Hello, Admin!</h1>
+
+<p>You've requested access to the AI Assessment Assistant admin portal. Click the button below to securely log in to your dashboard.</p>
+
+<div class="cta-section">
+  <%= link_to "Access Admin Dashboard", @magic_link_url, class: "btn btn-primary" %>
+</div>
+
+<div class="assessment-info" style="background-color: #fef3c7; border: 1px solid #f59e0b; color: #92400e;">
+  <p><strong>🔒 Security Information</strong></p>
+  <p style="color: #92400e;">This magic link will expire in <strong>1 hour</strong> and can only be used once. If you didn't request this login link, please ignore this email and contact your system administrator.</p>
+</div>
+
+<p>For security reasons, this link can only be used from the device where you requested it. If you have any issues accessing the admin panel, please contact support.</p>
+
+<div style="margin-top: 20px; padding: 15px; background-color: #f3f4f6; border-radius: 6px; font-size: 14px; color: #6b7280;">
+  <strong>Alternative access:</strong><br>
+  If the button doesn't work, copy and paste this URL into your browser:<br>
+  <span style="word-break: break-all;"><%= @magic_link_url %></span>
+</div>
+
+<p style="margin-top: 32px; color: #6b7280; font-size: 14px;">
+  <em>AI Assessment Assistant - Secure Admin Portal</em>
+</p>

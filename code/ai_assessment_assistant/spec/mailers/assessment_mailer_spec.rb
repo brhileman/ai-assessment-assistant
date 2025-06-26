@@ -17,7 +17,7 @@ RSpec.describe AssessmentMailer, type: :mailer do
     it "renders the headers" do
       expect(mail.subject).to eq("You're invited to complete an AI Assessment for Test Company")
       expect(mail.to).to eq(["john@example.com"])
-      expect(mail.from).to eq(["assessment@launchpadlab.com"])
+      expect(mail.from).to eq(["brett@launchpadlab.com"])
       expect(mail.reply_to).to eq(["assessment@launchpadlab.com"])
     end
 
@@ -25,17 +25,17 @@ RSpec.describe AssessmentMailer, type: :mailer do
       html_body = mail.html_part.body.encoded
       expect(html_body).to include("Hi John Doe,")
       expect(html_body).to include("Test Company")
-      expect(html_body).to include("Focus on AI adoption in healthcare")
       expect(html_body).to include("Start Your Assessment")
       expect(html_body).to include("LaunchPad Lab")
+      expect(html_body).to include("Hi from LaunchPad Lab!")
     end
 
     it "renders the text body" do
       text_body = mail.text_part.body.encoded
       expect(text_body).to include("Hi John Doe,")
       expect(text_body).to include("Test Company")
-      expect(text_body).to include("Focus on AI adoption in healthcare")
       expect(text_body).to include("START YOUR ASSESSMENT:")
+      expect(text_body).to include("Hi from LaunchPad Lab!")
     end
 
     it "includes assessment URL with stakeholder token" do
@@ -50,7 +50,7 @@ RSpec.describe AssessmentMailer, type: :mailer do
     it "renders the headers" do
       expect(mail.subject).to eq("Thank you for completing your AI Assessment")
       expect(mail.to).to eq(["john@example.com"])
-      expect(mail.from).to eq(["assessment@launchpadlab.com"])
+      expect(mail.from).to eq(["brett@launchpadlab.com"])
       expect(mail.reply_to).to eq(["assessment@launchpadlab.com"])
     end
 
