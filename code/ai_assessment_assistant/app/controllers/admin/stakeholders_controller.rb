@@ -66,7 +66,7 @@ class Admin::StakeholdersController < ApplicationController
   end
 
   def find_stakeholder
-    @stakeholder = @company.stakeholders.find_by!(invitation_token: params[:id])
+    @stakeholder = @company.stakeholders.find_by!(invitation_token: params[:token])
   end
 
   def stakeholder_params

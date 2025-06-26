@@ -6,6 +6,7 @@ RSpec.describe "Admin::Stakeholders", type: :request do
 
   before do
     sign_in admin, scope: :admin
+    ActionMailer::Base.deliveries.clear
   end
 
   describe "GET /index" do
@@ -69,6 +70,41 @@ RSpec.describe "Admin::Stakeholders", type: :request do
         expect(stakeholder.assessment).to be_present
         expect(stakeholder.status).to eq("invited")
       end
+
+      it "sends invitation email and tracks invitation_sent_at" do
+        expect {
+          post admin_company_stakeholders_path(company), params: valid_params
+        }.to change { ActionMailer::Base.deliveries.count }.by(1)
+        
+        stakeholder = Stakeholder.last
+        expect(stakeholder.invitation_sent_at).to be_present
+        expect(stakeholder.invitation_sent_at).to be_within(1.second).of(Time.current)
+        
+        # Verify email content
+        email = ActionMailer::Base.deliveries.last
+        expect(email.to).to eq(["john.doe@example.com"])
+        expect(email.subject).to include("invited")
+      end
+
+      context "when email delivery fails" do
+        before do
+          allow(AssessmentMailer).to receive(:stakeholder_invitation)
+            .and_raise(StandardError.new("Email service error"))
+        end
+
+        it "creates stakeholder but shows email error message" do
+          expect {
+            post admin_company_stakeholders_path(company), params: valid_params
+          }.to change(Stakeholder, :count).by(1)
+          
+          expect(response).to redirect_to(admin_company_path(company))
+          expect(flash[:notice]).to include("there was an issue sending the invitation email")
+          
+          # Verify invitation_sent_at is not set when email fails
+          stakeholder = Stakeholder.last
+          expect(stakeholder.invitation_sent_at).to be_nil
+        end
+      end
     end
 
     context "with invalid parameters" do
@@ -97,11 +133,82 @@ RSpec.describe "Admin::Stakeholders", type: :request do
 
     it "deletes the stakeholder" do
       expect {
-        delete admin_company_stakeholder_path(company, stakeholder)
+        delete admin_company_stakeholder_path(company, stakeholder.invitation_token)
       }.to change(Stakeholder, :count).by(-1)
       
       expect(response).to redirect_to(admin_company_path(company))
       expect(flash[:notice]).to include("has been removed")
+    end
+  end
+
+  describe "POST /resend_invitation" do
+    let!(:stakeholder) { create(:stakeholder, company: company, invitation_sent_at: 2.days.ago) }
+    
+    before do
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it "sends invitation email again" do
+      expect {
+        post resend_invitation_admin_company_stakeholder_path(company, stakeholder.invitation_token)
+      }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      
+      expect(response).to redirect_to(admin_company_path(company))
+      expect(flash[:notice]).to include("Invitation email resent")
+      expect(flash[:notice]).to include(stakeholder.name)
+      expect(flash[:notice]).to include(stakeholder.email)
+      
+      # Verify email was sent to correct recipient
+      email = ActionMailer::Base.deliveries.last
+      expect(email.to).to eq([stakeholder.email])
+    end
+
+    it "updates invitation_sent_at timestamp" do
+      old_timestamp = stakeholder.invitation_sent_at
+      
+      post resend_invitation_admin_company_stakeholder_path(company, stakeholder.invitation_token)
+      
+      stakeholder.reload
+      expect(stakeholder.invitation_sent_at).to be > old_timestamp
+      expect(stakeholder.invitation_sent_at).to be_within(1.second).of(Time.current)
+    end
+
+    context "when stakeholder has never been invited" do
+      let!(:stakeholder) { create(:stakeholder, company: company, invitation_sent_at: nil) }
+
+      it "sends invitation and sets invitation_sent_at" do
+        post resend_invitation_admin_company_stakeholder_path(company, stakeholder.invitation_token)
+        
+        stakeholder.reload
+        expect(stakeholder.invitation_sent_at).to be_present
+        expect(ActionMailer::Base.deliveries.count).to eq(1)
+      end
+    end
+
+    context "when email delivery fails" do
+      before do
+        allow(AssessmentMailer).to receive(:stakeholder_invitation)
+          .and_raise(StandardError.new("SMTP error"))
+      end
+
+      it "shows error message and does not update timestamp" do
+        old_timestamp = stakeholder.invitation_sent_at
+        
+        post resend_invitation_admin_company_stakeholder_path(company, stakeholder.invitation_token)
+        
+        expect(response).to redirect_to(admin_company_path(company))
+        expect(flash[:alert]).to include("Failed to resend invitation email")
+        
+        stakeholder.reload
+        expect(stakeholder.invitation_sent_at).to eq(old_timestamp)
+      end
+    end
+
+    context "with invalid stakeholder token" do
+      it "returns 404 not found" do
+        post resend_invitation_admin_company_stakeholder_path(company, "invalid-token")
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
