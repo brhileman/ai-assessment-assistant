@@ -1,14 +1,17 @@
-<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center p-4">
-  <div class="w-full max-w-md">
-    <!-- Glassmorphism Card -->
-    <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
-      
-      <!-- LaunchPad Lab Logo -->
-      <div class="mb-8">
-        <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
-            alt: "LaunchPad Lab",
-            class: "h-8 mx-auto filter brightness-0 invert" %>
-      </div>
+<div class="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex flex-col">
+  
+  <!-- Header with Logo -->
+  <header class="fixed top-0 left-0 right-0 z-40 w-full py-4 flex justify-center">
+    <%= image_tag "Blue-Horizontal-LPL-Logo.svg", 
+        alt: "LaunchPad Lab",
+        class: "h-6 filter brightness-0 invert" %>
+  </header>
+  
+  <!-- Main Content -->
+  <div class="flex-1 flex items-center justify-center p-4 pt-24">
+    <div class="w-full max-w-md">
+      <!-- Glassmorphism Card -->
+      <div class="backdrop-blur-md bg-white/10 rounded-3xl border border-white/20 shadow-2xl p-8 text-center">
       
       <!-- Completion Message -->
       <div class="mb-8">
