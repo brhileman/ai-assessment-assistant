@@ -27,7 +27,7 @@ class AdminMailer < ApplicationMailer
   
   def host
     if Rails.env.production?
-      ENV.fetch('HEROKU_APP_NAME', 'ai-assessment-assistant') + '.herokuapp.com'
+      ENV.fetch('APP_HOST', 'ai-assessment-assistant-9e4a484c0b2f.herokuapp.com')
     else
       'localhost'
     end
