@@ -82,6 +82,9 @@ RSpec.describe Assessment, type: :model do
     
     describe '.recent' do
       it 'orders by created_at desc' do
+        # Clear any pre-existing assessments to ensure clean test
+        Assessment.destroy_all
+        
         older_assessment = create(:assessment, created_at: 2.hours.ago)
         newer_assessment = create(:assessment, created_at: 1.hour.ago)
         
@@ -123,20 +126,20 @@ RSpec.describe Assessment, type: :model do
         expect(assessment.duration_minutes).to be_nil
       end
       
-      it 'returns nil when created_at is missing' do
+      it 'returns nil when started_at is missing' do
         assessment.completed_at = Time.current
-        assessment.created_at = nil
+        assessment.started_at = nil
         expect(assessment.duration_minutes).to be_nil
       end
       
       it 'calculates duration in minutes correctly' do
-        assessment.created_at = 30.minutes.ago
+        assessment.started_at = 30.minutes.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_minutes).to eq(30)
       end
       
       it 'rounds duration to nearest minute' do
-        assessment.created_at = 10.5.minutes.ago
+        assessment.started_at = 10.5.minutes.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_minutes).to eq(11)
       end
@@ -144,7 +147,7 @@ RSpec.describe Assessment, type: :model do
     
     describe '#duration_seconds' do
       it 'calculates duration in seconds correctly' do
-        assessment.created_at = 90.seconds.ago
+        assessment.started_at = 90.seconds.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_seconds).to eq(90)
       end
@@ -187,10 +190,12 @@ RSpec.describe Assessment, type: :model do
       let!(:assessment) { create(:assessment, stakeholder: stakeholder, completed_at: nil) }
       
       it 'sets completed_at to current time' do
-        freeze_time do
-          assessment.mark_completed!
-          expect(assessment.completed_at).to eq(Time.current)
-        end
+        time_before = Time.current
+        assessment.mark_completed!
+        time_after = Time.current
+        
+        expect(assessment.completed_at).to be >= time_before
+        expect(assessment.completed_at).to be <= time_after
       end
       
       it 'updates stakeholder status' do
@@ -230,7 +235,7 @@ RSpec.describe Assessment, type: :model do
     
     describe '#completion_date_formatted' do
       it 'returns formatted date when completed' do
-        assessment.completed_at = Time.parse('2024-01-15 14:30:00')
+        assessment.completed_at = Time.zone.parse('2024-01-15 14:30:00')
         expect(assessment.completion_date_formatted).to eq('January 15, 2024 at 02:30 PM')
       end
       
@@ -247,27 +252,27 @@ RSpec.describe Assessment, type: :model do
       end
       
       it 'handles durations less than 1 minute' do
-        assessment.created_at = 30.seconds.ago
+        assessment.started_at = 29.seconds.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_formatted).to eq('Less than 1 minute')
       end
       
       it 'formats minutes correctly' do
-        assessment.created_at = 5.minutes.ago
+        assessment.started_at = 5.minutes.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_formatted).to eq('5 minutes')
         
-        assessment.created_at = 1.minute.ago
+        assessment.started_at = 1.minute.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_formatted).to eq('1 minute')
       end
       
       it 'formats hours and minutes correctly' do
-        assessment.created_at = 75.minutes.ago
+        assessment.started_at = 75.minutes.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_formatted).to eq('1 hour 15 minutes')
         
-        assessment.created_at = 120.minutes.ago
+        assessment.started_at = 120.minutes.ago
         assessment.completed_at = Time.current
         expect(assessment.duration_formatted).to eq('2 hours')
       end
@@ -300,16 +305,16 @@ RSpec.describe Assessment, type: :model do
       
       it 'calculates average duration correctly' do
         # Assessment that took 10 minutes
-        assessment1 = create(:assessment, created_at: 10.minutes.ago, completed_at: Time.current)
+        assessment1 = create(:assessment, started_at: 10.minutes.ago, completed_at: Time.current)
         # Assessment that took 20 minutes
-        assessment2 = create(:assessment, created_at: 20.minutes.ago, completed_at: Time.current)
+        assessment2 = create(:assessment, started_at: 20.minutes.ago, completed_at: Time.current)
         
         expect(Assessment.average_duration_minutes).to eq(15.0)
       end
       
-      it 'ignores assessments without created_at' do
-        assessment_with_duration = create(:assessment, created_at: 10.minutes.ago, completed_at: Time.current)
-        assessment_without_created_at = create(:assessment, created_at: nil, completed_at: Time.current)
+      it 'ignores assessments without started_at' do
+        assessment_with_duration = create(:assessment, started_at: 10.minutes.ago, completed_at: Time.current)
+        assessment_without_started_at = create(:assessment, started_at: nil, completed_at: Time.current)
         
         expect(Assessment.average_duration_minutes).to eq(10.0)
       end

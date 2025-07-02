@@ -18,13 +18,13 @@ class Assessment < ApplicationRecord
   end
   
   def duration_minutes
-    return nil unless completed_at && created_at
-    ((completed_at - created_at) / 1.minute).round
+    return nil unless completed_at && started_at
+    ((completed_at - started_at) / 1.minute).round
   end
   
   def duration_seconds
-    return nil unless completed_at && created_at
-    (completed_at - created_at).round
+    return nil unless completed_at && started_at
+    (completed_at - started_at).round
   end
   
   def transcript_word_count
@@ -79,14 +79,14 @@ class Assessment < ApplicationRecord
   end
   
   def self.average_duration_minutes
-    completed_assessments = completed.where.not(created_at: nil)
+    completed_assessments = completed.where.not(started_at: nil)
     return 0 if completed_assessments.empty?
     
-    total_duration = completed_assessments.sum do |assessment|
-      assessment.duration_minutes || 0
-    end
+    assessments_with_duration = completed_assessments.select { |a| a.duration_minutes.present? && a.duration_minutes > 0 }
+    return 0 if assessments_with_duration.empty?
     
-    (total_duration.to_f / completed_assessments.count).round(1)
+    total_duration = assessments_with_duration.sum(&:duration_minutes)
+    (total_duration.to_f / assessments_with_duration.count).round(1)
   end
   
   def self.completion_rate
