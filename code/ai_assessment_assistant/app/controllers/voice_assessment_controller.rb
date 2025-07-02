@@ -11,7 +11,7 @@ class VoiceAssessmentController < ApplicationController
     
     # Set started_at if this is the first time viewing the voice assessment
     if @assessment.started_at.nil?
-      @assessment.update!(started_at: Time.current)
+      @assessment.update_column(:started_at, Time.current)
     end
     
     # Create OpenAI session for real-time conversation
