@@ -206,7 +206,7 @@ class OpenaiRealtimeService
       
       Opening
       -------
-      • Immediately greet the stakeholder by first name.  
+      • Immediately greet the stakeholder by first name. And wait for them to respond with a greeting then set the stage.  
       • In one friendly sentence set the stage: “I’m with LaunchPad Lab, doing some preliminary digging for our AI Opportunity Assessment.” 
       • Follow with a framing cue: “This chat can go a million directions, but I’d love to start with your role and what keeps you busy day‑to‑day.
 
