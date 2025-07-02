@@ -1,0 +1,50 @@
+# AI Assessment Assistant - Project Context
+
+## Project Overview
+This is a Rails 8 application for conducting AI readiness assessments through voice-powered conversations with stakeholders. The project is built by LaunchPad Lab.
+
+## Production Environment
+- **IMPORTANT: This application is deployed to production on Heroku**
+- **Production URL**: https://ai-assessment-assistant-9e4a484c0b2f.herokuapp.com/
+- **Heroku App Name**: ai-assessment-assistant
+- **Deployment Command**: `git push heroku main`
+
+## Project Structure
+- The Rails application is located in `code/ai_assessment_assistant/` (nested structure)
+- Product documentation is in `shape/` directory
+- Wrapper scripts in `bin/` automatically handle the nested structure
+
+## Key Technologies
+- Rails 8.0.2 with PostgreSQL
+- Tailwind CSS for styling
+- OpenAI Realtime API for voice conversations
+- SendGrid for email delivery
+- Devise passwordless for admin authentication
+- RSpec for testing
+
+## Development Workflow
+1. Always create a new branch before making changes
+2. Follow the Nova workflow rules (see shape/ directory)
+3. Use the wrapper scripts in bin/ instead of cd'ing to the Rails directory
+4. Deploy to Heroku from the main branch only
+
+## Important Files
+- `code/ai_assessment_assistant/app/services/openai_realtime_service.rb` - Contains AI agent instructions
+- `code/ai_assessment_assistant/config/credentials.yml.enc` - Encrypted credentials
+- `shape/` - All product documentation and task tracking
+
+## Environment Variables (Production)
+- OPENAI_API_KEY
+- OPENAI_ORGANIZATION_ID  
+- SENDGRID_API_KEY
+- DATABASE_URL (set by Heroku)
+- RAILS_MASTER_KEY
+
+## Testing
+Run tests with: `bin/bundle exec rspec`
+
+## Common Commands
+- Start dev server: `bin/dev`
+- Rails console: `bin/rails console`
+- Deploy to Heroku: `git push heroku main`
+- View production logs: `heroku logs --tail` 

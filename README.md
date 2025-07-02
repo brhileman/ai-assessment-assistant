@@ -156,6 +156,52 @@ bin/bundle exec rspec spec/system
 COVERAGE=true bin/bundle exec rspec
 ```
 
+## 🚀 **Deployment & Production**
+
+### **Production Environment**
+- **Platform**: Hosted on Heroku
+- **App Name**: `ai-assessment-assistant`
+- **Production URL**: https://ai-assessment-assistant-9e4a484c0b2f.herokuapp.com/
+- **Git Remote**: `heroku` (https://git.heroku.com/ai-assessment-assistant.git)
+
+### **Deployment Process**
+```bash
+# Deploy to Heroku (from main branch)
+git push heroku main
+
+# Run migrations on Heroku
+heroku run rails db:migrate
+
+# Check production logs
+heroku logs --tail
+
+# Open production app
+heroku open
+```
+
+### **Environment Variables**
+Required production environment variables on Heroku:
+- `OPENAI_API_KEY` - OpenAI API key for voice assessments
+- `OPENAI_ORGANIZATION_ID` - OpenAI organization ID
+- `SENDGRID_API_KEY` - SendGrid API key for email delivery
+- `DATABASE_URL` - Automatically set by Heroku
+- `RAILS_MASTER_KEY` - For Rails encrypted credentials
+
+### **Heroku Configuration**
+- **Stack**: Heroku-24
+- **Buildpacks**: 
+  1. `heroku-buildpack-monorepo` (for nested Rails app structure)
+  2. `heroku/ruby`
+- **Add-ons**: 
+  - Heroku Postgres (database)
+  - Heroku Redis (for caching/ActionCable)
+
+### **Important Notes for Future Development**
+- The Rails app is nested in `code/ai_assessment_assistant/` directory
+- Heroku uses the monorepo buildpack to handle this structure
+- All deployments should be done from the main branch
+- Database migrations run automatically via release phase (see `Procfile`)
+
 ## 📊 **Current Features Overview**
 
 ### **For Administrators**
