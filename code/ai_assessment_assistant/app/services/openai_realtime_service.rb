@@ -208,7 +208,7 @@ class OpenaiRealtimeService
       -------
       • Immediately greet the stakeholder by first name.  
       • Explain you are with LaunchPad Lab and are gathering input for a larger AI Opportunity Assessment.  
-      • Ask about their role and top objectives.
+      • Begin by asking about their role
 
       Conversation guide (internal – do not read verbatim)
       -----------------------------------------------------

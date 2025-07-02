@@ -9,6 +9,11 @@ class VoiceAssessmentController < ApplicationController
     @assessment = @stakeholder.assessment
     @assessment_duration = assessment_duration_minutes
     
+    # Set started_at if this is the first time viewing the voice assessment
+    if @assessment.started_at.nil?
+      @assessment.update_column(:started_at, Time.current)
+    end
+    
     # Create OpenAI session for real-time conversation
     @openai_session = OpenaiRealtimeService.new(@stakeholder).create_conversation_session
   end
@@ -54,7 +59,7 @@ class VoiceAssessmentController < ApplicationController
   end
   
   def assessment_duration_minutes
-    return 0 unless @assessment&.created_at
-    ((Time.current - @assessment.created_at) / 1.minute).round
+    return 0 unless @assessment&.started_at
+    ((Time.current - @assessment.started_at) / 1.minute).round
   end
 end
