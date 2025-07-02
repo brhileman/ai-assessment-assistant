@@ -1,4 +1,14 @@
+# Service for managing OpenAI Realtime API WebRTC voice conversations
+# Handles session creation, ephemeral token generation, transcript management,
+# and conversation flow for AI readiness assessments
 class OpenaiRealtimeService
+  # Configuration constants
+  OPENAI_MODEL = "gpt-4o-realtime-preview-2024-10-01"
+  OPENAI_VOICE = "ballad"
+  API_ENDPOINT = "https://api.openai.com/v1/realtime"
+  SESSION_CACHE_DURATION = 2.hours
+  TOKEN_EXPIRY_DURATION = 1.minute
+  
   def initialize(stakeholder)
     @stakeholder = stakeholder
     @company = stakeholder.company
@@ -20,18 +30,18 @@ class OpenaiRealtimeService
     session_config = {
       session_id: session_id,
       ephemeral_token: ephemeral_token[:client_secret][:value],
-      api_endpoint: "https://api.openai.com/v1/realtime",
-      model: "gpt-4o-realtime-preview-2024-10-01",
-      voice: "echo",
+      api_endpoint: API_ENDPOINT,
+      model: OPENAI_MODEL,
+      voice: OPENAI_VOICE,
       instructions: conversation_instructions,
       company_name: @company.name,
       stakeholder_name: @stakeholder.name,
       conversation_history: [],
-      session_expires_at: 1.minute.from_now # Ephemeral tokens expire in 1 minute
+      session_expires_at: TOKEN_EXPIRY_DURATION.from_now
     }
     
     # Store session for later retrieval
-    Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: 2.hours)
+    Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: SESSION_CACHE_DURATION)
     
     session_config
   end
@@ -50,7 +60,7 @@ class OpenaiRealtimeService
     }
     
     session_config[:conversation_history] = conversation_history
-    Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: 2.hours)
+    Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: SESSION_CACHE_DURATION)
     
     # Update assessment with real-time transcript
     update_assessment_transcript(transcript_entry)
@@ -65,13 +75,13 @@ class OpenaiRealtimeService
     session_config = Rails.cache.read("openai_session_#{session_id}")
     return nil unless session_config
     
-    # Check if ephemeral token is still valid (they expire in 1 minute)
+    # Check if ephemeral token is still valid
     if session_config[:session_expires_at] < Time.current
       # Generate new ephemeral token
       ephemeral_token = generate_ephemeral_token
       session_config[:ephemeral_token] = ephemeral_token[:client_secret][:value]
-      session_config[:session_expires_at] = 1.minute.from_now
-      Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: 2.hours)
+      session_config[:session_expires_at] = TOKEN_EXPIRY_DURATION.from_now
+      Rails.cache.write("openai_session_#{session_id}", session_config, expires_in: SESSION_CACHE_DURATION)
     end
     
     # Return configuration needed for frontend WebRTC connection
@@ -157,8 +167,8 @@ class OpenaiRealtimeService
     request['Content-Type'] = "application/json"
     
     request.body = JSON.generate({
-      model: "gpt-4o-realtime-preview-2024-10-01",
-      voice: "ballad"
+      model: OPENAI_MODEL,
+      voice: OPENAI_VOICE
     })
     
     response = http.request(request)
@@ -171,7 +181,7 @@ class OpenaiRealtimeService
   end
   
   def conversation_instructions
-    # Get company-specific instructions for the {AI Agent Instructions} placeholder
+    # Get company-specific instructions or use default context
     company_context = if @company.custom_instructions.present?
       @company.custom_instructions
     else
