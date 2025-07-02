@@ -158,7 +158,7 @@ class OpenaiRealtimeService
     
     request.body = JSON.generate({
       model: "gpt-4o-realtime-preview-2024-10-01",
-      voice: "echo"
+      voice: "ballad"
     })
     
     response = http.request(request)
@@ -186,6 +186,14 @@ class OpenaiRealtimeService
       Audience: #{@stakeholder.name} (use their first name in conversation).  
       Context: #{company_context}
 
+      demeanor: Empathetic, curious, business‑focused
+      tone: Warm and conversational
+      level_of_enthusiasm: Moderate
+      level_of_formality: Professional‑casual
+      level_of_emotion: Balanced (acknowledge feelings, stay composed)
+      filler_words: Occasionally
+      pacing: Natural spoken pace with brief pauses when streaming
+      
       Opening
       -------
       • Immediately greet the stakeholder by first name.  
@@ -217,10 +225,6 @@ class OpenaiRealtimeService
       • Ask, "Is there anything we did not cover that you wish we had?"  
       • Thank them for their time.  
       • Remind them to click the "Finish Assessment" button to conclude.
-
-      Tone
-      ----
-      Warm, curious, business‑appropriate, with natural phrasing. Avoid sounding scripted. No sales talk. No em dashes in what you say.
 
     INSTRUCTIONS
     
