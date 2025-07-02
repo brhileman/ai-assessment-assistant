@@ -152,6 +152,10 @@
         
         this.stakeholderToken = '<%= @stakeholder.invitation_token %>';
         this.openaiSession = <%= raw @openai_session.to_json %>;
+        
+        // Flag to prevent multiple AI greetings
+        this.hasGreeted = false;
+        this.isInitializing = true;
       },
 
       setupEventListeners() {
@@ -375,14 +379,20 @@
             this.audioElement.srcObject = event.streams[0];
           };
           
-          // Request microphone permission and add local audio track
+          // Request microphone permission with optimized settings
           this.mediaStream = await navigator.mediaDevices.getUserMedia({ 
             audio: {
               sampleRate: 24000,
               channelCount: 1,
               echoCancellation: true,
               noiseSuppression: true,
-              autoGainControl: true
+              autoGainControl: true,
+              sampleSize: 16,
+              // Additional constraints to reduce feedback
+              googEchoCancellation: true,
+              googAutoGainControl: true,
+              googNoiseSuppression: true,
+              googHighpassFilter: true
             } 
           });
           
@@ -416,21 +426,25 @@
                 input_audio_transcription: { model: 'whisper-1' },
                 turn_detection: {
                   type: 'server_vad',
-                  threshold: 0.6,
-                  prefix_padding_ms: 300,
-                  silence_duration_ms: 1500
+                  threshold: 0.8,  // Increased to reduce noise sensitivity
+                  prefix_padding_ms: 500,  // Increased to capture full speech
+                  silence_duration_ms: 2000  // Increased to prevent cutting off speech
                 },
                 temperature: 0.7
               }
             });
             
-            // Trigger AI to start the conversation with a simple response.create
-            setTimeout(() => {
-              console.log('🚀 Triggering AI to start conversation...');
-              this.sendOpenAIEvent({
-                type: 'response.create'
-              });
-            }, 1500); // Increased delay to ensure session is fully configured
+            // Trigger AI to start the conversation only once
+            if (!this.hasGreeted && this.isInitializing) {
+              this.hasGreeted = true;  // Set immediately to prevent multiple calls
+              setTimeout(() => {
+                console.log('🚀 Triggering AI to start conversation...');
+                this.sendOpenAIEvent({
+                  type: 'response.create'
+                });
+                this.isInitializing = false;
+              }, 3000); // Increased to 3 seconds for more stable initialization
+            }
           });
           
           // Create SDP offer
@@ -498,9 +512,13 @@
             break;
             
           case 'conversation.item.input_audio_transcription.completed':
-            // User speech transcribed
-            if (event.transcript) {
-              this.addMessage('You', event.transcript, true);
+            // User speech transcribed - filter out noise/short utterances
+            if (event.transcript && event.transcript.trim().length > 2) {
+              // Skip common noise transcriptions
+              const noisePatterns = /^(um|uh|hmm|mm|ah|oh|bye|hi|hello|hey|thank you|thanks|yes|no|ok|okay)$/i;
+              if (!noisePatterns.test(event.transcript.trim()) || event.transcript.trim().length > 5) {
+                this.addMessage('You', event.transcript, true);
+              }
             }
             break;
             
