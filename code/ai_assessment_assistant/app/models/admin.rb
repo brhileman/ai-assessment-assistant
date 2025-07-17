@@ -28,7 +28,7 @@ class Admin < ApplicationRecord
   private
   
   def email_in_allowlist
-    allowlist = Rails.application.credentials.admin_allowlist || ['admin@launchpadlab.com', 'assessment@launchpadlab.com', 'brett@launchpadlab.com', 'bretthileman@gmail.com']
+    allowlist = Rails.application.credentials.admin_allowlist || ['admin@launchpadlab.com', 'assessment@launchpadlab.com', 'brett@launchpadlab.com', 'bretthileman@gmail.com', 'ryan@launchpadlab.com']
     unless allowlist.include?(email)
       errors.add(:email, "is not authorized for admin access")
     end
