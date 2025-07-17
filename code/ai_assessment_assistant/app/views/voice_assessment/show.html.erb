@@ -158,6 +158,13 @@
         this.transcriptData = [];
         this.conversationSession = null;
         
+        // Real-time transcript state
+        this.currentStreamingMessage = null;
+        this.currentStreamingContent = '';
+        this.isStreamingAI = false;
+        this.isUserSpeaking = false;
+        this.userSpeechIndicator = null;
+        
         // WebRTC components
         this.peerConnection = null;
         this.dataChannel = null;
@@ -570,12 +577,23 @@
             console.log('💬 Conversation item created:', event.item?.role);
             break;
             
+          case 'input_audio_buffer.speech_started':
+            // User started speaking
+            this.showUserSpeechIndicator();
+            break;
+            
+          case 'input_audio_buffer.speech_stopped':
+            // User stopped speaking
+            this.hideUserSpeechIndicator();
+            break;
+            
           case 'conversation.item.input_audio_transcription.completed':
             // Only process user speech if VAD is enabled (prevents phantom responses during init)
             if (this.vadEnabled && event.transcript && event.transcript.trim().length > 2) {
               // Skip common noise transcriptions
               const noisePatterns = /^(um|uh|hmm|mm|ah|oh|bye|hi|hello|hey|thank you|thanks|yes|no|ok|okay)$/i;
               if (!noisePatterns.test(event.transcript.trim()) || event.transcript.trim().length > 5) {
+                this.hideUserSpeechIndicator(); // Hide indicator before showing message
                 this.addMessage('You', event.transcript, true);
               }
             } else if (!this.vadEnabled) {
@@ -585,6 +603,7 @@
             
           case 'response.created':
             console.log('🎤 Response created - AI should start speaking');
+            this.startStreamingAIMessage();
             break;
             
           case 'response.audio_transcript.delta':
@@ -595,9 +614,7 @@
           case 'response.audio_transcript.done':
             // AI response complete
             console.log('📝 AI transcript complete:', event.transcript);
-            if (event.transcript) {
-              this.addMessage('Assistant', event.transcript, false);
-            }
+            this.finalizeStreamingAIMessage(event.transcript);
             break;
             
           case 'response.audio.delta':
@@ -634,10 +651,132 @@
       },
 
       handleAIResponseDelta(delta) {
-        // Handle real-time AI response text (could show typing indicator)
-        if (delta) {
+        // Handle real-time AI response text
+        if (delta && this.isStreamingAI && this.currentStreamingMessage) {
           console.log('🔤 AI speaking:', delta);
+          
+          // Append the delta to current content
+          this.currentStreamingContent += delta;
+          
+          // Update the streaming message display
+          const contentElement = this.currentStreamingMessage.querySelector('.streaming-content');
+          if (contentElement) {
+            contentElement.textContent = this.currentStreamingContent;
+            this.scrollToBottom();
+          }
         }
+      },
+      
+      startStreamingAIMessage() {
+        if (this.isStreamingAI) return; // Already streaming
+        
+        console.log('🎬 Starting streaming AI message...');
+        this.isStreamingAI = true;
+        this.currentStreamingContent = '';
+        
+        // Create streaming message container
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'flex space-x-3';
+        
+        messageDiv.innerHTML = `
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+              <span class="text-white text-xs font-semibold">AI</span>
+            </div>
+          </div>
+          <div class="flex-1">
+            <p class="text-cyan-400 text-sm font-medium mb-1">Assistant</p>
+            <p class="text-slate-200 text-sm leading-relaxed streaming-content"></p>
+            <span class="text-slate-500 text-xs mt-1 block">${this.getCurrentTime()}</span>
+          </div>
+        `;
+        
+        this.currentStreamingMessage = messageDiv;
+        this.transcriptMessages.appendChild(messageDiv);
+        this.scrollToBottom();
+      },
+      
+      finalizeStreamingAIMessage(finalTranscript) {
+        if (!this.isStreamingAI || !this.currentStreamingMessage) return;
+        
+        console.log('🏁 Finalizing streaming AI message:', finalTranscript);
+        
+        // Use final transcript if provided, otherwise use accumulated content
+        const finalContent = finalTranscript || this.currentStreamingContent;
+        
+        if (finalContent && finalContent.trim()) {
+          // Update final content
+          const contentElement = this.currentStreamingMessage.querySelector('.streaming-content');
+          if (contentElement) {
+            contentElement.textContent = finalContent;
+          }
+          
+          // Save to transcript data and backend
+          const transcriptEntry = {
+            speaker: 'Assistant',
+            content: finalContent,
+            timestamp: new Date().toISOString(),
+            isUser: false
+          };
+          
+          this.transcriptData.push(transcriptEntry);
+          this.updateBackendTranscript(transcriptEntry);
+        }
+        
+        // Reset streaming state
+        this.isStreamingAI = false;
+        this.currentStreamingMessage = null;
+        this.currentStreamingContent = '';
+        this.scrollToBottom();
+      },
+      
+      showUserSpeechIndicator() {
+        if (this.isUserSpeaking || this.userSpeechIndicator) return;
+        
+        console.log('🎤 User started speaking...');
+        this.isUserSpeaking = true;
+        
+        // Create user speech indicator
+        const indicatorDiv = document.createElement('div');
+        indicatorDiv.className = 'flex space-x-3 user-speech-indicator';
+        
+        indicatorDiv.innerHTML = `
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-slate-600 rounded-full flex items-center justify-center">
+              <span class="text-white text-xs font-semibold">You</span>
+            </div>
+          </div>
+          <div class="flex-1">
+            <p class="text-slate-300 text-sm font-medium mb-1">You</p>
+            <div class="flex items-center space-x-2 text-slate-400 text-sm">
+              <div class="flex space-x-1">
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+              </div>
+              <span>Speaking...</span>
+            </div>
+            <span class="text-slate-500 text-xs mt-1 block">${this.getCurrentTime()}</span>
+          </div>
+        `;
+        
+        this.userSpeechIndicator = indicatorDiv;
+        this.transcriptMessages.appendChild(indicatorDiv);
+        this.scrollToBottom();
+      },
+      
+      hideUserSpeechIndicator() {
+        if (!this.isUserSpeaking || !this.userSpeechIndicator) return;
+        
+        console.log('🔇 User stopped speaking');
+        this.isUserSpeaking = false;
+        
+        // Remove the indicator
+        if (this.userSpeechIndicator.parentNode) {
+          this.userSpeechIndicator.parentNode.removeChild(this.userSpeechIndicator);
+        }
+        
+        this.userSpeechIndicator = null;
       },
 
       async stopVoiceConversation() {
@@ -677,6 +816,12 @@
 
       // End voice session
       async endVoiceSession() {
+        // Clean up any streaming states
+        this.hideUserSpeechIndicator();
+        if (this.isStreamingAI) {
+          this.finalizeStreamingAIMessage(this.currentStreamingContent);
+        }
+        
         await this.stopVoiceConversation();
         
         try {
