@@ -164,6 +164,7 @@
         this.isStreamingAI = false;
         this.isUserSpeaking = false;
         this.userSpeechIndicator = null;
+        this.streamingThrottle = null;
         
         // WebRTC components
         this.peerConnection = null;
@@ -651,18 +652,23 @@
       },
 
       handleAIResponseDelta(delta) {
-        // Handle real-time AI response text
+        // Handle real-time AI response text with throttling for smoother appearance
         if (delta && this.isStreamingAI && this.currentStreamingMessage) {
           console.log('🔤 AI speaking:', delta);
           
           // Append the delta to current content
           this.currentStreamingContent += delta;
           
-          // Update the streaming message display
-          const contentElement = this.currentStreamingMessage.querySelector('.streaming-content');
-          if (contentElement) {
-            contentElement.textContent = this.currentStreamingContent;
-            this.scrollToBottom();
+          // Throttle updates to make text appear more smoothly (every ~100ms)
+          if (!this.streamingThrottle) {
+            this.streamingThrottle = setTimeout(() => {
+              const contentElement = this.currentStreamingMessage.querySelector('.streaming-content');
+              if (contentElement) {
+                contentElement.textContent = this.currentStreamingContent;
+                this.scrollToBottom();
+              }
+              this.streamingThrottle = null;
+            }, 100);
           }
         }
       },
@@ -727,16 +733,23 @@
         this.isStreamingAI = false;
         this.currentStreamingMessage = null;
         this.currentStreamingContent = '';
+        
+        // Clear any pending throttle
+        if (this.streamingThrottle) {
+          clearTimeout(this.streamingThrottle);
+          this.streamingThrottle = null;
+        }
+        
         this.scrollToBottom();
       },
       
       showUserSpeechIndicator() {
         if (this.isUserSpeaking || this.userSpeechIndicator) return;
         
-        console.log('🎤 User started speaking...');
+        console.log('🎤 User listening...');
         this.isUserSpeaking = true;
         
-        // Create user speech indicator
+        // Create user listening indicator with animated dots
         const indicatorDiv = document.createElement('div');
         indicatorDiv.className = 'flex space-x-3 user-speech-indicator';
         
@@ -749,12 +762,11 @@
           <div class="flex-1">
             <p class="text-slate-300 text-sm font-medium mb-1">You</p>
             <div class="flex items-center space-x-2 text-slate-400 text-sm">
-              <div class="flex space-x-1">
-                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
-                <div class="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+              <div class="flex space-x-1.5">
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                <div class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
               </div>
-              <span>Speaking...</span>
             </div>
             <span class="text-slate-500 text-xs mt-1 block">${this.getCurrentTime()}</span>
           </div>
@@ -768,7 +780,7 @@
       hideUserSpeechIndicator() {
         if (!this.isUserSpeaking || !this.userSpeechIndicator) return;
         
-        console.log('🔇 User stopped speaking');
+        console.log('🔇 User finished speaking');
         this.isUserSpeaking = false;
         
         // Remove the indicator
@@ -820,6 +832,12 @@
         this.hideUserSpeechIndicator();
         if (this.isStreamingAI) {
           this.finalizeStreamingAIMessage(this.currentStreamingContent);
+        }
+        
+        // Clear any pending throttle
+        if (this.streamingThrottle) {
+          clearTimeout(this.streamingThrottle);
+          this.streamingThrottle = null;
         }
         
         await this.stopVoiceConversation();
