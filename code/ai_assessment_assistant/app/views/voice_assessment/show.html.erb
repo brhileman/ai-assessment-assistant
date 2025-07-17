@@ -175,6 +175,7 @@
         // Flag to prevent multiple AI greetings
         this.hasGreeted = false;
         this.isInitializing = true;
+        this.vadEnabled = false; // Track VAD state
       },
 
       setupEventListeners() {
@@ -456,7 +457,7 @@
           this.dataChannel.addEventListener('open', () => {
             console.log('✅ Data channel opened - ready for conversation!');
             
-            // Send session configuration
+            // Send session configuration with VAD disabled initially
             this.sendOpenAIEvent({
               type: 'session.update',
               session: {
@@ -466,12 +467,7 @@
                 input_audio_format: 'pcm16',
                 output_audio_format: 'pcm16',
                 input_audio_transcription: { model: 'whisper-1' },
-                turn_detection: {
-                  type: 'server_vad',
-                  threshold: 0.8,  // Increased to reduce noise sensitivity
-                  prefix_padding_ms: 500,  // Increased to capture full speech
-                  silence_duration_ms: 2000  // Increased to prevent cutting off speech
-                },
+                turn_detection: null, // Disabled initially to prevent phantom responses
                 temperature: 0.7
               }
             });
@@ -489,7 +485,7 @@
                 this.sendOpenAIEvent({
                   type: 'response.create'
                 });
-                this.isInitializing = false;
+                // Keep isInitializing = true until VAD is enabled
               }, 1500); // 1.5 seconds - balance between stability and UX
             }
           });
@@ -542,6 +538,22 @@
         }
       },
 
+      enableVoiceActivation() {
+        console.log('🎤 Enabling Voice Activity Detection...');
+        this.vadEnabled = true;
+        this.sendOpenAIEvent({
+          type: 'session.update',
+          session: {
+            turn_detection: {
+              type: 'server_vad',
+              threshold: 0.7,  // Slightly more sensitive
+              prefix_padding_ms: 300,  // Reduced padding for faster response
+              silence_duration_ms: 800  // Much faster response - 0.8 seconds instead of 2
+            }
+          }
+        });
+      },
+
       handleOpenAIEvent(event) {
         console.log('📨 OpenAI event:', event.type, event);
         
@@ -559,13 +571,15 @@
             break;
             
           case 'conversation.item.input_audio_transcription.completed':
-            // User speech transcribed - filter out noise/short utterances
-            if (event.transcript && event.transcript.trim().length > 2) {
+            // Only process user speech if VAD is enabled (prevents phantom responses during init)
+            if (this.vadEnabled && event.transcript && event.transcript.trim().length > 2) {
               // Skip common noise transcriptions
               const noisePatterns = /^(um|uh|hmm|mm|ah|oh|bye|hi|hello|hey|thank you|thanks|yes|no|ok|okay)$/i;
               if (!noisePatterns.test(event.transcript.trim()) || event.transcript.trim().length > 5) {
                 this.addMessage('You', event.transcript, true);
               }
+            } else if (!this.vadEnabled) {
+              console.log('🚫 Ignoring user speech during initialization:', event.transcript);
             }
             break;
             
@@ -580,6 +594,7 @@
             
           case 'response.audio_transcript.done':
             // AI response complete
+            console.log('📝 AI transcript complete:', event.transcript);
             if (event.transcript) {
               this.addMessage('Assistant', event.transcript, false);
             }
@@ -596,6 +611,16 @@
             
           case 'response.done':
             console.log('🎯 AI response completed');
+            console.log('🔍 Debug - isInitializing:', this.isInitializing, 'vadEnabled:', this.vadEnabled);
+            
+            // Enable VAD after the first AI greeting is complete
+            if (this.isInitializing && !this.vadEnabled) {
+              console.log('🎉 Initial greeting complete - enabling voice input');
+              this.enableVoiceActivation();
+              this.isInitializing = false;
+            } else {
+              console.log('⚠️ VAD not enabled - condition not met');
+            }
             break;
             
           case 'error':
@@ -683,6 +708,10 @@
         if (!this.conversationSession) {
           console.error('No active conversation session');
           return;
+        }
+        
+        if (!this.vadEnabled) {
+          console.warn('Voice input not yet enabled - message may be processed after initialization');
         }
         
         try {

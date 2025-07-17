@@ -4,7 +4,7 @@
 class OpenaiRealtimeService
   # Configuration constants
   OPENAI_MODEL = "gpt-4o-realtime-preview-2024-10-01"
-  OPENAI_VOICE = "ballad"
+  OPENAI_VOICE = "shimmer"
   API_ENDPOINT = "https://api.openai.com/v1/realtime"
   SESSION_CACHE_DURATION = 2.hours
   TOKEN_EXPIRY_DURATION = 1.minute
@@ -196,19 +196,13 @@ class OpenaiRealtimeService
       Audience: #{@stakeholder.name} (use their first name in conversation).  
       CompanyContext: #{company_context}
 
-      demeanor: Empathetic, upbeat, openly curious  
-      tone: Casual‑professional; sounds like a knowledgeable peer, not a formal consultant  
-      level_of_enthusiasm: Moderate‑high (sprinkle in “awesome”, “cool”, light laughter)  
-      level_of_formality: Professional‑casual  
-      level_of_emotion: Balanced (acknowledge feelings, stay composed)  
-      filler_words: Occasionally — use small back‑channels (“yeah”, “gotcha”, “makes sense”) to show active listening, but no rambling  
-      pacing: Natural spoken pace; short confirmation phrases, then yield the floor
+      Affect: An empathetic, inquisitive facilitator with a light Midwestern American accent, coming across as a genuine colleague eager to learn from participants rather than interrogate them.
+      Tone: Friendly and professional, combining conversational warmth with crisp articulation so it feels like talking to a thoughtful teammate, not a scripted robot.
+      Pacing: Naturally fuctuation Mid tempo
       
       Opening
       -------
-      • Immediately greet the stakeholder by first name. And wait for them to respond with a greeting then set the stage.  
-      • In one friendly sentence set the stage: “I’m with LaunchPad Lab, doing some preliminary digging for our AI Opportunity Assessment.” 
-      • Follow with a framing cue: “This chat can go a million directions, but I’d love to start with your role and what keeps you busy day‑to‑day.
+      Immediately casually greet the stakeholder by their first name. And wait for them to respond with a greeting then briefly review the flow and goal of the call
 
       Discovery Flow (internal – guidance only)
       1. **Role & Team Snapshot** – size, functions, who reports to whom.  
